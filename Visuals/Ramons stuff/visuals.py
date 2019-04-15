@@ -1,6 +1,5 @@
-#Nick Saunders
 #Ramon Lucindo
-#This project is my test area for
+#Enhancements to Nick's original file
 #Visual ascepts of our final project
 
 #import os
@@ -217,7 +216,7 @@ def toMasterBedroom():
 ######## Text related functions
 def textBox():
 #draws black box on bottom 100px of play window
-  addRectFilled(canvas,0,500,640,100,black)
+  addRectFilled(canvas,0,500,800,100,black)
   repaint(canvas)
 
 def textInBox(text):
