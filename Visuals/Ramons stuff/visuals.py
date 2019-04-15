@@ -61,7 +61,7 @@ def whichRoom():
   global roomIn
   global GAMERUNNING
 
-  userInput = requestString("Which room do you want to go into?\n -Basement\n -Bathroom\n -Bedroom\n -BilliardRoom\n -DiningRom\n -Kitchen\n -Library\n -LivingRoom\n -Master BedRoom\n")
+  userInput = requestString("Which room do you want to go into? Please enter as listed.\n Basement\n Bathroom\n Bedroom\n BilliardRoom\n DiningRoom\n Kitchen\n Library\n LivingRoom\n MasterBedroom\n")
   userInput = userInput.lower()
   usedInput = userInput.strip()
 
