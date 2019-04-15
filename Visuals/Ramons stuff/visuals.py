@@ -34,7 +34,7 @@ libraryImage = pickAFile()
 livingroomImage = pickAFile()
 masterbedroomImage = pickAFile()
 
-canvas = makeEmptyPicture(640,480)
+canvas = makeEmptyPicture(1280,960)
 basement = makePicture(basementImage)
 bathroom = makePicture(bathroomImage)
 bedroom = makePicture(bedroomImage)
