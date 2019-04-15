@@ -200,10 +200,10 @@ def toMasterBedroom():
 ######## Text related functions
 def textBox():
 #draws black box on bottom 100px of play window
-  addRectFilled(canvas,50,500,700,80,black)
+  addRectFilled(canvas,50,480,700,100,black)
   repaint(canvas)
 
 def textInBox(text):
   textBox()
-  addText(canvas,100,520,text,white)
+  addText(canvas,75,500,text,white)
   repaint(canvas)
