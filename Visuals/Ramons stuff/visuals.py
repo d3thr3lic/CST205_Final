@@ -22,7 +22,7 @@
 #libraryImage = getMediaPath() + "library.jpg"
 #livingroomImage = getMediaPath() + "livingroom.jpg"
 #masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
-
+setMediaPath()
 basementImage = pickAFile()
 bathroomImage = pickAFile()
 bedroomImage = pickAFile()
