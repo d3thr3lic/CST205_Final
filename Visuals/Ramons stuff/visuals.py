@@ -34,7 +34,7 @@ libraryImage = pickAFile()
 livingroomImage = pickAFile()
 masterbedroomImage = pickAFile()
 
-canvas = makeEmptyPicture(1280,960)
+canvas = makeEmptyPicture(800,600)
 basement = makePicture(basementImage)
 bathroom = makePicture(bathroomImage)
 bedroom = makePicture(bedroomImage)
@@ -217,10 +217,10 @@ def toMasterBedroom():
 ######## Text related functions
 def textBox():
 #draws black box on bottom 100px of play window
-  addRectFilled(canvas,0,400,640,100,white)
+  addRectFilled(canvas,0,500,640,100,black)
   repaint(canvas)
 
 def textInBox(text):
   textBox()
-  addText(canvas,0,420,text,black)
+  addText(canvas,0,520,text,white)
   repaint(canvas)
