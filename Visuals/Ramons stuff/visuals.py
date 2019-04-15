@@ -2,36 +2,19 @@
 #Enhancements to Nick's original file
 #Visual ascepts of our final project
 
-#import os
 
-#def setMediaPathToCurrentDir():
-  #fullPathToFile = os.path.abspath(__file__)
-  #if fullPathToFile.startswith('/'):
-    #setMediaPath(os.path.dirname(fullPathToFile))
-  #else:
-    #setMediaPath(os.path.dirname(fullPathToFile) + '\\')
-
+setMediaPath()
 
 #Global Variables
-#basementImage = getMediaPath() + "basement.jpg"
-#bathroomImage = getMediaPath() + "bathroom.jpg"
-#bedroomImage = getMediaPath() + "bedroom.jpg"
-#billiardroomImage = getMediaPath() + "billiardroom.jpg"
-#diningroomImage = getMediaPath() + "diningroom.jpg"
-#kitchenImage = getMediaPath() + "kitchen.jpg"
-#libraryImage = getMediaPath() + "library.jpg"
-#livingroomImage = getMediaPath() + "livingroom.jpg"
-#masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
-setMediaPath()
-basementImage = pickAFile()
-bathroomImage = pickAFile()
-bedroomImage = pickAFile()
-billiardroomImage = pickAFile()
-diningroomImage = pickAFile()
-kitchenImage = pickAFile()
-libraryImage = pickAFile()
-livingroomImage = pickAFile()
-masterbedroomImage = pickAFile()
+basementImage = getMediaPath() + "basement.jpg"
+bathroomImage = getMediaPath() + "bathroom.jpg"
+bedroomImage = getMediaPath() + "bedroom.jpg"
+billiardroomImage = getMediaPath() + "billiardroom.jpg"
+diningroomImage = getMediaPath() + "diningroom.jpg"
+kitchenImage = getMediaPath() + "kitchen.jpg"
+libraryImage = getMediaPath() + "library.jpg"
+livingroomImage = getMediaPath() + "livingroom.jpg"
+masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
 
 canvas = makeEmptyPicture(800,600)
 basement = makePicture(basementImage)
