@@ -13,6 +13,7 @@ def setMediaPathToCurrentDir():
   else:
     setMediaPath(os.path.dirname(fullPathToFile) + '\\')
     
+setMediaPathToCurrentDir()
 
 #Global Variables
 basementImage = getMediaPath() + "basement.jpg"
@@ -24,7 +25,7 @@ kitchenImage = getMediaPath() + "kitchen.jpg"
 libraryImage = getMediaPath() + "library.jpg"
 livingroomImage = getMediaPath() + "livingroom.jpg"
 masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
-greenImage = getMediaPath() + "greenPic.jpg"
+#greenImage = getMediaPath() + "greenPic.jpg"
 
 canvas = makeEmptyPicture(800,600)
 basement = makePicture(basementImage)
@@ -36,14 +37,14 @@ kitchen = makePicture(kitchenImage)
 library = makePicture(libraryImage)
 livingroom = makePicture(livingroomImage)
 masterbedroom = makePicture(masterbedroomImage)
-greenPic = makePicture(greenImage)
+#greenPic = makePicture(greenImage)
 
 
 roomIn = ""
 GAMERUNNING = True
 
 def startDemo(): #################Use this function here to start demo
-  setMediaPathToCurrentDir()
+  
   showInformation("This is a demo of the visuals. This also shows off a text box function and text")
   showInformation("To end this game, type exit at anytime")
   whichRoom()
