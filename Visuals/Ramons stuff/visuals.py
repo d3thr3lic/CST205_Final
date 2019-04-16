@@ -143,7 +143,7 @@ def whichRoom():
         whichRoom()
       else:
         toMasterBedroom()
-    elif userInput == "exit":
+    elif userInput == "EXIT":
       #showInformation("This demo is quitting... but won't yet close the main window, Sorry!")
       GAMERUNNING = False
     else:
