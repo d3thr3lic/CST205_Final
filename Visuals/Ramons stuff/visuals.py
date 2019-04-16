@@ -1,6 +1,8 @@
+#Visual aspects of our final project
+#this is a demo
 #Ramon Lucindo
-#Enhancements to Nick's original file
-#Visual ascepts of our final project
+#Nick Saunders
+
 
 import os
 
@@ -9,11 +11,14 @@ def setMediaPathToCurrentDir():
   if fullPathToFile.startswith('/'):
     setMediaPath(os.path.dirname(fullPathToFile))
   else:
-setMediaPath(os.path.dirname(fullPathToFile) + '\\'))
-
-setMediaPath()
+    setMediaPath(os.path.dirname(fullPathToFile) + '\\')
+    
+setMediaPathToCurrentDir()
 
 #Global Variables
+welcomeImage = getMediaPath() + "welcome.jpg"
+rulesImage = getMediaPath() + "rules.jpg"
+noPlayImage = getMediaPath() + "noplay.jpg"
 basementImage = getMediaPath() + "basement.jpg"
 bathroomImage = getMediaPath() + "bathroom.jpg"
 bedroomImage = getMediaPath() + "bedroom.jpg"
@@ -23,9 +28,15 @@ kitchenImage = getMediaPath() + "kitchen.jpg"
 libraryImage = getMediaPath() + "library.jpg"
 livingroomImage = getMediaPath() + "livingroom.jpg"
 masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
-greenImage = getMediaPath() + "greenPic.jpg"
+winnerImage = getMediaPath() + "winner.jpg"
+loserImage = getMediaPath() + "loser.jpg"
+group9Image = getMediaPath() + "group9.jpg"
+#greenImage = getMediaPath() + "greenPic.jpg"
 
 canvas = makeEmptyPicture(800,600)
+welcome = makeEmptyPicture(welcomeImage)
+rules = makeEmptyPicture(rulesImage)
+noPlay = makePicture(noPlayImage)
 basement = makePicture(basementImage)
 bathroom = makePicture(bathroomImage)
 bedroom = makePicture(bedroomImage)
@@ -35,29 +46,37 @@ kitchen = makePicture(kitchenImage)
 library = makePicture(libraryImage)
 livingroom = makePicture(livingroomImage)
 masterbedroom = makePicture(masterbedroomImage)
-greenPic = makePicture(greenImage)
+winner = makePicture(winnerImage)
+loser = makePicture(loserImage)
+group9 = makePicture(group9Image)
+#greenPic = makePicture(greenImage)
 
 
 roomIn = ""
 GAMERUNNING = True
 
 def startDemo(): #################Use this function here to start demo
-  showInformation("This is a demo of the visuals. This also shows off a text box function and text")
-  showInformation("To end this game, type exit at anytime")
-  whichRoom()
+  if welcome():
+    showInformation("This is a demo of the visuals. This also shows off a text box function and text")
+    showInformation("To end this game, type exit at anytime")
+    if instructions() == False:
+      noPlay()
+    else:
+      whichRoom()
+  else:
+    noPlay()
+        
   ## starts off with a requestString prompting user for room.
   ## once selected, will repaint into room and prompt to go to the next room
   ## if asked to go into same room, will reject responce and ask again.
-
+  
 def whichRoom():
   global roomIn
-  global GAMERUNNING
-
+  global GAMERUNNING  
   userInput = requestString("Which room do you want to go into?\n      Basement\n      Bathroom\n      Bedroom\n      Billiard Room\n      Dining Room\n      Kitchen\n      Library\n      Living Room\n      Master Bedroom\n")
   userInput = userInput.lower()
   userInput = userInput.replace(" ", "")
- 
-
+  
   while GAMERUNNING:
     if userInput == "basement":
       if roomIn == "basement":
@@ -79,7 +98,6 @@ def whichRoom():
         whichRoom()
       else:
         toBedroom()
-        #############3
     elif userInput == "billiardroom":
       if roomIn == "billiardroom":
         #showInformation("You are already in the BilliardRoom")
@@ -120,16 +138,47 @@ def whichRoom():
       #showInformation("This demo is quitting... but won't yet close the main window, Sorry!")
       GAMERUNNING = False
     else:
-      #showInformation("This input is not reconginzed, please try again.\nCheck out the textbox change after you press okay")
-      textInBox("This is an invalid Input, please try again")
+      showInformation("This input is not reconginzed, please try again.")
+      #textInBox("This is an invalid Input, please try again")
       whichRoom()
-
+      
+#######Beginning functions 
+def welcome():
+  copyInto(welcome,canvas,0,0)
+  repaint(canvas)
+  userInput = requestString("Would you like to play? Y or N?")
+  userInput = userInput.lower()
+  if userInput == "y":
+    return True
+  elif userInput == "n":
+    return False
+  else:
+    showInformation("You made an invalid entry.")
+    welcome()
+    
+def instructions():
+  copyInto(rules,canvas,0,0)
+  repaint(canvas)
+  userInput = requestString("Would you like to continue? Y or N?")
+  userInput = userInput.lower()
+  if userInput == "y":
+    return True
+  elif userInput == "n":
+    return False
+  else:
+    showInformation("You made an invalid entry.")
+    instructions()
+    
+def noPlay():
+  copyInto(noPlay,canvas,0,0)
+  repaint(canvas)
+  
 #######Room Related Functions
 def toBasement():
   global roomIn
   roomIn = "basement"
   copyInto(basement,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the Basement"
   whiteText(text)
   whichRoom()
@@ -138,16 +187,16 @@ def toBathroom():
   global roomIn
   roomIn = "bathroom"
   copyInto(bathroom,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the BathRoom"
-  blackText(text)
+  whiteText(text)
   whichRoom()
 
 def toBedroom():
   global roomIn
   roomIn = "bedroom"
   copyInto(bedroom,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the BedRoom"
   whiteText(text)
   whichRoom()
@@ -156,7 +205,7 @@ def toBilliardroom():
   global roomIn
   roomIn = "billardroom"
   copyInto(billiardroom,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the BilliardRoom"
   whiteText(text)
   whichRoom()
@@ -165,7 +214,7 @@ def toDiningroom():
   global roomIn
   roomIn = "diningroom"
   copyInto(diningroom,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the DiningRoom"
   whiteText(text)
   whichRoom()
@@ -174,7 +223,7 @@ def toKitchen():
   global roomIn
   roomIn = "kitchen"
   copyInto(kitchen,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the Kitchen"
   whiteText(text)
   whichRoom()
@@ -183,7 +232,7 @@ def toLibrary():
   global roomIn
   roomIn = "library"
   copyInto(library,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the Library"
   whiteText(text)
   whichRoom()
@@ -192,7 +241,7 @@ def toLivingroom():
   global roomIn
   roomIn = "livingroom"
   copyInto(livingroom,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the LivingRoom"
   whiteText(text)
   whichRoom()
@@ -201,24 +250,21 @@ def toMasterBedroom():
   global roomIn
   roomIn = "masterbedroom"
   copyInto(masterbedroom,canvas,0,0)
-  chromakey(greenPic,canvas)
+  repaint(canvas)
   text = "This room is the Master BedRoom"
-  blackText(text)
+  whiteText(text)
   whichRoom()
     
 ######## Text related functions
 def textBox():
   addRectFilled(canvas,50,480,700,100,black)
-  
-def blackText(text):
+
+def whiteText(text):
   textBox()
   addText(canvas,75,500,text,white)
   repaint(canvas)
 
-def whiteText(text):
-  addText(canvas,75,500,text,white)
-  repaint(canvas)
-
+##for items?
 def chromakey(greenPic, backgroundPic):
   pixelsFront = getPixels(greenPic)
   pixelsBack = getPixels(backgroundPic)

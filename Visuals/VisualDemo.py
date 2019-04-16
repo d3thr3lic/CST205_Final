@@ -16,6 +16,9 @@ def setMediaPathToCurrentDir():
 setMediaPathToCurrentDir()
 
 #Global Variables
+welcomeImage = getMediaPath() + "welcome.jpg"
+#rulesImage = getMediaPath() + "rules.jpg"
+#noPlayImage = getMediaPath() + "noplay.jpg"
 basementImage = getMediaPath() + "basement.jpg"
 bathroomImage = getMediaPath() + "bathroom.jpg"
 bedroomImage = getMediaPath() + "bedroom.jpg"
@@ -25,9 +28,15 @@ kitchenImage = getMediaPath() + "kitchen.jpg"
 libraryImage = getMediaPath() + "library.jpg"
 livingroomImage = getMediaPath() + "livingroom.jpg"
 masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
+#winnerImage = getMediaPath() + "winner.jpg"
+#loserImage = getMediaPath() + "loser.jpg"
+#group9Image = getMediaPath() + "group9.jpg"
 #greenImage = getMediaPath() + "greenPic.jpg"
 
 canvas = makeEmptyPicture(800,600)
+#welcome = makeEmptyPicture(welcomeImage)
+#rules = makeEmptyPicture(rulesImage)
+#noPlay = makePicture(noPlayImage)
 basement = makePicture(basementImage)
 bathroom = makePicture(bathroomImage)
 bedroom = makePicture(bedroomImage)
@@ -37,6 +46,9 @@ kitchen = makePicture(kitchenImage)
 library = makePicture(libraryImage)
 livingroom = makePicture(livingroomImage)
 masterbedroom = makePicture(masterbedroomImage)
+#winner = makePicture(winnerImage)
+#loser = makePicture(loserImage)
+#group9 = makePicture(group9Image)
 #greenPic = makePicture(greenImage)
 
 
@@ -44,10 +56,16 @@ roomIn = ""
 GAMERUNNING = True
 
 def startDemo(): #################Use this function here to start demo
-  
+  #if welcome():
   showInformation("This is a demo of the visuals. This also shows off a text box function and text")
   showInformation("To end this game, type exit at anytime")
+    #if instructions() == False:
+      #noPlay()
+    #else:
   whichRoom()
+  #else:
+    #noPlay()
+        
   ## starts off with a requestString prompting user for room.
   ## once selected, will repaint into room and prompt to go to the next room
   ## if asked to go into same room, will reject responce and ask again.
@@ -121,9 +139,9 @@ def whichRoom():
       GAMERUNNING = False
     else:
       showInformation("This input is not reconginzed, please try again.")
-      #textInBox("This is an invalid Input, please try again")
+      #textInBox("This is an invalid input.  Please try again.")
       whichRoom()
-
+      
 #######Room Related Functions
 def toBasement():
   global roomIn
