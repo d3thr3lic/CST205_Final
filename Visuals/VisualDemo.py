@@ -1,6 +1,6 @@
-#Visual ascpects of our final project
+#Visual aspects of our final project
 #this is a demo
-#Ramon Lucino
+#Ramon Lucindo
 #Nick Saunders
 
 
@@ -208,12 +208,6 @@ def toMasterBedroom():
 ######## Text related functions
 def textBox():
   addRectFilled(canvas,50,480,700,100,black)
-
-#remove blackText? keep it consistent with a textbox 
-def blackText(text):
-  textBox()
-  addText(canvas,75,500,text,white)
-  repaint(canvas)
 
 def whiteText(text):
   textBox()

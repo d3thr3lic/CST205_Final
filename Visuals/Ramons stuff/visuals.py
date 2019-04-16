@@ -2,6 +2,14 @@
 #Enhancements to Nick's original file
 #Visual ascepts of our final project
 
+import os
+
+def setMediaPathToCurrentDir():
+  fullPathToFile = os.path.abspath(__file__)
+  if fullPathToFile.startswith('/'):
+    setMediaPath(os.path.dirname(fullPathToFile))
+  else:
+setMediaPath(os.path.dirname(fullPathToFile) + '\\'))
 
 setMediaPath()
 
@@ -34,7 +42,6 @@ roomIn = ""
 GAMERUNNING = True
 
 def startDemo(): #################Use this function here to start demo
-  #setMediaPathToCurrentDir()
   showInformation("This is a demo of the visuals. This also shows off a text box function and text")
   showInformation("To end this game, type exit at anytime")
   whichRoom()
