@@ -15,6 +15,7 @@ kitchenImage = getMediaPath() + "kitchen.jpg"
 libraryImage = getMediaPath() + "library.jpg"
 livingroomImage = getMediaPath() + "livingroom.jpg"
 masterbedroomImage = getMediaPath() + "masterbedroom.jpg"
+greenImage = getMediaPath() + "greenPic.jpg"
 
 canvas = makeEmptyPicture(800,600)
 basement = makePicture(basementImage)
@@ -26,6 +27,7 @@ kitchen = makePicture(kitchenImage)
 library = makePicture(libraryImage)
 livingroom = makePicture(livingroomImage)
 masterbedroom = makePicture(masterbedroomImage)
+greenPic = makePicture(greenImage)
 
 
 roomIn = ""
@@ -120,7 +122,7 @@ def toBasement():
   global roomIn
   roomIn = "basement"
   copyInto(basement,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the Basement"
   textInBox(text)
   whichRoom()
@@ -129,7 +131,7 @@ def toBathroom():
   global roomIn
   roomIn = "bathroom"
   copyInto(bathroom,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the BathRoom"
   textInBox(text)
   whichRoom()
@@ -138,7 +140,7 @@ def toBedroom():
   global roomIn
   roomIn = "bedroom"
   copyInto(bedroom,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the BedRoom"
   textInBox(text)
   whichRoom()
@@ -147,7 +149,7 @@ def toBilliardroom():
   global roomIn
   roomIn = "billardroom"
   copyInto(billiardroom,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the BilliardRoom"
   textInBox(text)
   whichRoom()
@@ -156,7 +158,7 @@ def toDiningroom():
   global roomIn
   roomIn = "diningroom"
   copyInto(diningroom,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the DiningRoom"
   textInBox(text)
   whichRoom()
@@ -165,7 +167,7 @@ def toKitchen():
   global roomIn
   roomIn = "kitchen"
   copyInto(kitchen,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the Kitchen"
   textInBox(text)
   whichRoom()
@@ -174,7 +176,7 @@ def toLibrary():
   global roomIn
   roomIn = "library"
   copyInto(library,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the Library"
   textInBox(text)
   whichRoom()
@@ -183,7 +185,7 @@ def toLivingroom():
   global roomIn
   roomIn = "livingroom"
   copyInto(livingroom,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the LivingRoom"
   textInBox(text)
   whichRoom()
@@ -192,7 +194,7 @@ def toMasterBedroom():
   global roomIn
   roomIn = "masterbedroom"
   copyInto(masterbedroom,canvas,0,0)
-  chromakey(canvas)
+  chromakey(greenPic,canvas)
   text = "This room is the Master BedRoom"
   textInBox(text)
   whichRoom()
@@ -208,10 +210,8 @@ def textInBox(text):
   addText(canvas,75,500,text,white)
   repaint(canvas)
 
-def chromakey(image):
-  greenPic = getMediaPath() + "greenPic.jpg"
-  backgroundPic = image
-  greenPic = makePicture(greenPic)
+def chromakey(greenPic, canvas):
+  backgroundPic = canvas
   pixelsFront = getPixels(greenPic)
   pixelsBack = getPixels(backgroundPic)
   for pixel in pixelsFront: 
