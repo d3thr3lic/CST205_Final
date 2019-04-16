@@ -16,7 +16,7 @@ def setMediaPathToCurrentDir():
 setMediaPathToCurrentDir()
 
 #Global Variables
-welcomeImage = getMediaPath() + "welcome.jpg"
+titleImage = getMediaPath() + "title.jpg"
 rulesImage = getMediaPath() + "rules.jpg"
 noPlayImage = getMediaPath() + "noplay.jpg"
 basementImage = getMediaPath() + "basement.jpg"
@@ -34,8 +34,8 @@ group9Image = getMediaPath() + "group9.jpg"
 #greenImage = getMediaPath() + "greenPic.jpg"
 
 canvas = makeEmptyPicture(800,600)
-welcome = makeEmptyPicture(welcomeImage)
-rules = makeEmptyPicture(rulesImage)
+title = makePicture(titleImage)
+rules = makePicture(rulesImage)
 noPlay = makePicture(noPlayImage)
 basement = makePicture(basementImage)
 bathroom = makePicture(bathroomImage)
@@ -65,6 +65,15 @@ def startDemo(): #################Use this function here to start demo
       whichRoom()
   else:
     noPlay()
+  showInformation("If you won the game...")
+  copyInto(winner,canvas,0,0)
+  repaint(canvas)
+  showInformation("if you lost the game...")
+  copyInto(loser,canvas,0,0)
+  repaint(canvas)
+  showInformation("Roll the credits.")
+  copyInto(group9,canvas,0,0)
+  repaint(canvas)
         
   ## starts off with a requestString prompting user for room.
   ## once selected, will repaint into room and prompt to go to the next room
@@ -144,7 +153,7 @@ def whichRoom():
       
 #######Beginning functions 
 def welcome():
-  copyInto(welcome,canvas,0,0)
+  copyInto(title,canvas,0,0)
   repaint(canvas)
   userInput = requestString("Would you like to play? Y or N?")
   userInput = userInput.lower()
