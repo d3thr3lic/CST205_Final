@@ -210,8 +210,7 @@ def textInBox(text):
   addText(canvas,75,500,text,white)
   repaint(canvas)
 
-def chromakey(greenPic, canvas):
-  backgroundPic = canvas
+def chromakey(greenPic, backgroundPic):
   pixelsFront = getPixels(greenPic)
   pixelsBack = getPixels(backgroundPic)
   for pixel in pixelsFront: 
