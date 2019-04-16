@@ -49,7 +49,7 @@ MASTERBEDROOM = makePicture(MASTERBEDROOMIMAGE)
 WINNER = makePicture(WINNERIMAGE)
 LOSER = makePicture(LOSERIMAGE)
 GROUP9 = makePicture(GROUP9IMAGE)
-GREENPIC = makePicture(GREENIMAGE)
+#GREENPIC = makePicture(GREENIMAGE)
 
 
 roomIn = ""
