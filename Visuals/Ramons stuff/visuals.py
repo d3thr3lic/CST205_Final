@@ -124,7 +124,7 @@ def toBasement():
   copyInto(basement,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the Basement"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
 
 def toBathroom():
@@ -133,7 +133,7 @@ def toBathroom():
   copyInto(bathroom,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the BathRoom"
-  textInBox(text)
+  blackText(text)
   whichRoom()
 
 def toBedroom():
@@ -142,7 +142,7 @@ def toBedroom():
   copyInto(bedroom,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the BedRoom"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
 
 def toBilliardroom():
@@ -151,7 +151,7 @@ def toBilliardroom():
   copyInto(billiardroom,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the BilliardRoom"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
   
 def toDiningroom():
@@ -160,7 +160,7 @@ def toDiningroom():
   copyInto(diningroom,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the DiningRoom"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
   
 def toKitchen():
@@ -169,7 +169,7 @@ def toKitchen():
   copyInto(kitchen,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the Kitchen"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
   
 def toLibrary():
@@ -178,7 +178,7 @@ def toLibrary():
   copyInto(library,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the Library"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
   
 def toLivingroom():
@@ -187,7 +187,7 @@ def toLivingroom():
   copyInto(livingroom,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the LivingRoom"
-  textInBox(text)
+  whiteText(text)
   whichRoom()
   
 def toMasterBedroom():
@@ -196,17 +196,19 @@ def toMasterBedroom():
   copyInto(masterbedroom,canvas,0,0)
   chromakey(greenPic,canvas)
   text = "This room is the Master BedRoom"
-  textInBox(text)
+  blackText(text)
   whichRoom()
     
 ######## Text related functions
-#def textBox():
-#draws black box on bottom 100px of play window
-  #addRectFilled(canvas,50,480,700,100,black)
-  #repaint(canvas)
+def textBox():
+  addRectFilled(canvas,50,480,700,100,black)
+  
+def blackText(text):
+  textBox()
+  addText(canvas,75,500,text,white)
+  repaint(canvas)
 
-def textInBox(text):
-  #textBox()
+def whiteText(text):
   addText(canvas,75,500,text,white)
   repaint(canvas)
 
