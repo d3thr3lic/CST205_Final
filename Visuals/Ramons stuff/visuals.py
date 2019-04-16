@@ -120,7 +120,7 @@ def toBasement():
   global roomIn
   roomIn = "basement"
   copyInto(basement,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the Basement"
   textInBox(text)
   whichRoom()
@@ -129,7 +129,7 @@ def toBathroom():
   global roomIn
   roomIn = "bathroom"
   copyInto(bathroom,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the BathRoom"
   textInBox(text)
   whichRoom()
@@ -138,7 +138,7 @@ def toBedroom():
   global roomIn
   roomIn = "bedroom"
   copyInto(bedroom,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the BedRoom"
   textInBox(text)
   whichRoom()
@@ -147,7 +147,7 @@ def toBilliardroom():
   global roomIn
   roomIn = "billardroom"
   copyInto(billiardroom,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the BilliardRoom"
   textInBox(text)
   whichRoom()
@@ -156,7 +156,7 @@ def toDiningroom():
   global roomIn
   roomIn = "diningroom"
   copyInto(diningroom,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the DiningRoom"
   textInBox(text)
   whichRoom()
@@ -165,7 +165,7 @@ def toKitchen():
   global roomIn
   roomIn = "kitchen"
   copyInto(kitchen,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the Kitchen"
   textInBox(text)
   whichRoom()
@@ -174,7 +174,7 @@ def toLibrary():
   global roomIn
   roomIn = "library"
   copyInto(library,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the Library"
   textInBox(text)
   whichRoom()
@@ -183,7 +183,7 @@ def toLivingroom():
   global roomIn
   roomIn = "livingroom"
   copyInto(livingroom,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the LivingRoom"
   textInBox(text)
   whichRoom()
@@ -192,18 +192,36 @@ def toMasterBedroom():
   global roomIn
   roomIn = "masterbedroom"
   copyInto(masterbedroom,canvas,0,0)
-  repaint(canvas)
+  chromakey(canvas)
   text = "This room is the Master BedRoom"
   textInBox(text)
   whichRoom()
     
 ######## Text related functions
-def textBox():
+#def textBox():
 #draws black box on bottom 100px of play window
-  addRectFilled(canvas,50,480,700,100,black)
-  repaint(canvas)
+  #addRectFilled(canvas,50,480,700,100,black)
+  #repaint(canvas)
 
 def textInBox(text):
-  textBox()
+  #textBox()
   addText(canvas,75,500,text,white)
   repaint(canvas)
+
+def chromakey(image):
+  greenPic = getMediaPath() + "greenPic.jpg"
+  backgroundPic = image
+  greenPic = makePicture(greenPic)
+  pixelsFront = getPixels(greenPic)
+  pixelsBack = getPixels(backgroundPic)
+  for pixel in pixelsFront: 
+    r = pixel.getRed()
+    b = pixel.getBlue()
+    g = pixel.getGreen()
+    redBlueAvg = (r+b)/2.0
+    if (g > (redBlueAvg)*2.0):
+      pixelX = pixel.x
+      pixelY = pixel.y
+      backgroundPixel = getPixel(backgroundPic, pixelX, pixelY)
+      setColor(pixel, getColor(backgroundPixel))
+  repaint(greenPic)
