@@ -23,7 +23,7 @@ roomIn = ""
 
 
 def startDemo(): #################Use this function here to start demo
-  if welcome():
+  if welcome(): 
     showInformation("This is a demo of the visuals. This also shows off a text box function and text")
     showInformation("To end this game, type exit at anytime")
     if instructions() == False:
@@ -33,7 +33,10 @@ def startDemo(): #################Use this function here to start demo
   else:
     noPlay()
 
-def didWin():
+  endings()
+
+
+def endings():
   winner = makePicture(getMediaPath() + "winner.jpg")
   loser = makePicture(getMediaPath() + "loser.jpg")
   group9 = makePicture(getMediaPath() + "group9.jpg")
@@ -52,15 +55,24 @@ def didWin():
   ## once selected, will repaint into room and prompt to go to the next room
   ## if asked to go into same room, will reject responce and ask again.
 
-def whichRoom():
+def whichRoom(): ## when implemented in game, will take a parameter to switch rooms.
+  #i.e. def whichRoom(userInput):
+  #         if userInput == "basement":
+  #           if roomIn == "basement":
+  #             whiteText("You are already in the basement")
+  #             #ask for action again
+  #           else:
+  #             toBasement()
   global roomIn
   global GAMERUNNING
+  
+  ############################################################## this section is for development purposes only, will be handled by base game.
   userInput = requestString("Which room do you want to go into?\n      Basement\n      Bathroom\n      Bedroom\n      Billiard Room\n      Dining Room\n      Kitchen\n      Library\n      Living Room\n      Master Bedroom\nFor items, see Inventory")
   userInput = userInput.lower()
   userInput = userInput.replace(" ", "")
-
+  
   while GAMERUNNING:
-  ###room inputs only
+  ###room inputs only  
     if userInput == "basement":
       if roomIn == "basement":
         whiteText("You are already in the basement")
@@ -120,14 +132,17 @@ def whichRoom():
     elif userInput == "inventory":
       displayInventory()
     elif userInput == "exit":
-      GAMERUNNING = False
+      GAMERUNNING = False ## closes request string, but does not close game window
     else:
       showInformation("This input is not reconginzed, please try again.")
       #whiteText("This is an invalid Input, please try again")
       whichRoom()
+########################################################################################
+
 
 #######Beginning functions
 def welcome():
+### found bug, when you put in invalid entry at first question, then when it reprompts, and Y is selected, it rolls win/lose +credits
   title = makePicture(getMediaPath() + "title.jpg")
   copyInto(title,CANVAS,0,0)
   repaint(CANVAS)
@@ -169,7 +184,8 @@ def toBasement():
   repaint(CANVAS)
   text = "This room is the BASEMENT"
   whiteText(text)
-  whichRoom()
+  whichRoom() ## will be changed to userInput commands, 
+  #if they want to move around or switch rooms, they would have to go through the correct door using N,E,S,W rather that the ability to go to any room at will
 
 def toBathroom():
   global roomIn
@@ -263,6 +279,10 @@ def whiteText(text):
 
 #######For inventory
 def displayInventory():
+###
+### attempting to generalize for all items in a list. has issues, only takes in first element of list.
+### can easily be hard coded in a list to draw on screen by calling drawInventory() with the item's picture
+###
   inventory = ['one','two','three'] ## items in inventory for purposes of demo
   if len(inventory) == 0: ## if inventory is empty, will handle case
     showInformation("You do not have any items in your inventory")
@@ -272,28 +292,27 @@ def displayInventory():
     #repaint(CANVAS)#clears screen so if multiple items are looked at on screen, it will not overlap
     
     if invInput == 'leave':
-        repaint(CANVAS)
-        whichRoom()
+       whichRoom()
+        
     for item in inventory:
       if invInput != item:
         showInformation("You do not have that item.")
-        displayInventory()
+        break
       elif invInput == item:        
         itemPic = makePicture(getMediaPath() + item + ".png") #takes in item image
         posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
         posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
         drawInventory(itemPic,posX,posY)
-        whichRoom()
+        break    
  
     
-def drawInventory(item,width,height):
-  inventory = pyCopyIgnoreColor(item,CANVAS,width,height,white) #white was used for demo purposes
-  copyInto(inventory,CANVAS,0,0)
+def drawInventory(itemPic,width,height):
+  inventory = pyCopyIgnoreColor(itemPic,CANVAS,width,height,white) #white was used for demo purposes
   repaint(CANVAS)
 
 
 #copys images of items onto screen, ignores specfied color.
-def pyCopyIgnoreColor(source, target,targetX,targetY, colorToIgnore):
+def pyCopyIgnoreColor(source, target,targetX,targetY,colorToIgnore):
   sWidth = getWidth(source)
   sHeight = getHeight(source)
   tWidth = getWidth(target)
