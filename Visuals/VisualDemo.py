@@ -32,24 +32,7 @@ def startDemo(): #################Use this function here to start demo
       whichRoom()
   else:
     noPlay()
-
   endings()
-
-
-def endings():
-  winner = makePicture(getMediaPath() + "winner.jpg")
-  loser = makePicture(getMediaPath() + "loser.jpg")
-  group9 = makePicture(getMediaPath() + "group9.jpg")
-
-  showInformation("If you won the game...")
-  copyInto(winner,CANVAS,0,0)
-  repaint(CANVAS)
-  showInformation("if you lost the game...")
-  copyInto(loser,CANVAS,0,0)
-  repaint(CANVAS)
-  showInformation("Roll the credits.")
-  copyInto(group9,CANVAS,0,0)
-  repaint(CANVAS)
 
   ## starts off with a requestString prompting user for room.
   ## once selected, will repaint into room and prompt to go to the next room
@@ -140,7 +123,7 @@ def whichRoom(): ## when implemented in game, will take a parameter to switch ro
 ########################################################################################
 
 
-#######Beginning functions
+#######Beginning and ending functions
 def welcome():
 ### found bug, when you put in invalid entry at first question, then when it reprompts, and Y is selected, it rolls win/lose +credits
   title = makePicture(getMediaPath() + "title.jpg")
@@ -173,6 +156,21 @@ def instructions():
 def noPlay():
   noPlay = makePicture(getMediaPath() + "noPlay.jpg")
   copyInto(noPlay,CANVAS,0,0)
+  repaint(CANVAS)
+
+def endings():
+  winner = makePicture(getMediaPath() + "winner.jpg")
+  loser = makePicture(getMediaPath() + "loser.jpg")
+  group9 = makePicture(getMediaPath() + "group9.jpg")
+
+  showInformation("If you won the game...")
+  copyInto(winner,CANVAS,0,0)
+  repaint(CANVAS)
+  showInformation("if you lost the game...")
+  copyInto(loser,CANVAS,0,0)
+  repaint(CANVAS)
+  showInformation("Roll the credits.")
+  copyInto(group9,CANVAS,0,0)
   repaint(CANVAS)
 
 #######Room Related Functions
