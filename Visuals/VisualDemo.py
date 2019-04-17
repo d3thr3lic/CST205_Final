@@ -76,13 +76,13 @@ def whichRoom(): ## when implemented in game, will take a parameter to switch ro
         toBedroom()
     elif userInput == "billiardroom":
       if roomIn == "billiardroom":
-        whiteText("You are already in the billiardroom")
+        whiteText("You are already in the billiard room")
         whichRoom()
       else:
         toBilliardRoom()
     elif userInput == "diningroom":
       if roomIn == "diningroom":
-        whiteText("You are already in the diningroom")
+        whiteText("You are already in the dining room")
         whichRoom()
       else:
         toDiningRoom()
@@ -100,13 +100,13 @@ def whichRoom(): ## when implemented in game, will take a parameter to switch ro
         toLibrary()
     elif userInput == "livingroom":
       if roomIn == "livingroom":
-        whiteText("You are already in the livingroom")
+        whiteText("You are already in the living room")
         whichRoom()
       else:
         toLivingRoom()
     elif userInput == "masterbedroom":
       if roomIn == "masterbedroom":
-        whiteText("You are already in the Master bedroom")
+        whiteText("You are already in the master bedroom")
         whichRoom()
       else:
         tomasterbedroom()
@@ -117,7 +117,7 @@ def whichRoom(): ## when implemented in game, will take a parameter to switch ro
     elif userInput == "exit":
       GAMERUNNING = False ## closes request string, but does not close game window
     else:
-      showInformation("This input is not reconginzed, please try again.")
+      showInformation("This input is not recognized, please try again.")
       #whiteText("This is an invalid Input, please try again")
       whichRoom()
 ########################################################################################
