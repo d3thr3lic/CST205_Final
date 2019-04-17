@@ -23,7 +23,7 @@ roomIn = ""
 
 
 def startDemo(): #################Use this function here to start demo
-  if welcome(): 
+  if welcome() == 1: 
     showInformation("This is a demo of the visuals. This also shows off a text box function and text")
     showInformation("To end this game, type exit at anytime")
     if instructions() == False:
@@ -131,14 +131,14 @@ def welcome():
   repaint(CANVAS)
   userInput = requestString("Would you like to play? Y or N?")
   userInput = userInput.lower()
-  if userInput == "y":
-    return True
-  elif userInput == "n":
-    return False
-  else:
+  if userInput != "y" and userInput != "n":
     showInformation("You made an invalid entry.")
-    welcome()
-
+    return welcome()
+  elif userInput == "y":
+    return 1
+  else:
+    return 2
+  
 def instructions():
   rules = makePicture(getMediaPath() + "rules.jpg")
   copyInto(rules,CANVAS,0,0)
