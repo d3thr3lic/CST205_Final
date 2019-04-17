@@ -125,7 +125,6 @@ def whichRoom(): ## when implemented in game, will take a parameter to switch ro
 
 #######Beginning and ending functions
 def welcome():
-### found bug, when you put in invalid entry at first question, then when it reprompts, and Y is selected, it rolls win/lose +credits
   title = makePicture(getMediaPath() + "title.jpg")
   copyInto(title,CANVAS,0,0)
   repaint(CANVAS)
