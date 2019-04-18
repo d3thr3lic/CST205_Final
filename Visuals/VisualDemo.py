@@ -115,7 +115,7 @@ def whichRoom(): ## when implemented in game, will take a parameter to switch ro
     elif userInput == "inventory":
       displayInventory()
     elif userInput == "exit":
-      GAMERUNNING = False ## closes request string, but does not close game window
+      GAMERUNNING = False ## closes request string, but does not close game windo
     else:
       showInformation("This input is not recognized, please try again.")
       #whiteText("This is an invalid Input, please try again")
@@ -280,31 +280,47 @@ def displayInventory():
 ### attempting to generalize for all items in a list. has issues, only takes in first element of list.
 ### can easily be hard coded in a list to draw on screen by calling drawInventory() with the item's picture
 ###
-  inventory = ['one','two','three'] ## items in inventory for purposes of demo
+  inventory = ['one','two','three'] ## items in inventory for purposes of demo, not actually used in demo
+  
   if len(inventory) == 0: ## if inventory is empty, will handle case
+    ## should be handled by inventory function in main game already
     showInformation("You do not have any items in your inventory")
     whichRoom()
   else:
     invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
-    #repaint(CANVAS)#clears screen so if multiple items are looked at on screen, it will not overlap
-    
-    if invInput == 'leave':
-       whichRoom()
-        
-    for item in inventory:
-      if invInput != item:
-        showInformation("You do not have that item.")
-        break
-      elif invInput == item:        
-        itemPic = makePicture(getMediaPath() + item + ".png") #takes in item image
-        posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
-        posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
-        drawInventory(itemPic,posX,posY)
-        break    
  
+    if invInput == 'leave':
+       whichRoom()       
+   ## be sure to check if item is in inventory through main inventory function in main game.
+   
+    if invInput == 'one':        
+      itemPic = makePicture(getMediaPath() + "one.png")
+      text = "This should display '1's description from the dictionary"
+      whiteText(text)
+      drawInventory(itemPic)
+      whichRoom() ## return to idle input state out of inventory
+    elif invInput == 'two':        
+      itemPic = makePicture(getMediaPath() + "two.png")
+      text = "This should display '2's description from the dictionary"
+      whiteText(text)
+      drawInventory(itemPic)
+      whichRoom()## return to idle input state out of inventory
+    elif invInput == 'three':        
+      itemPic = makePicture(getMediaPath() + "three.png")
+      text = "This should display '3's description from the dictionary"
+      whiteText(text)
+      drawInventory(itemPic)
+      whichRoom()## return to idle input state out of inventory
+    else:
+      showInformation("You do not have that item.")        
     
-def drawInventory(itemPic,width,height):
-  inventory = pyCopyIgnoreColor(itemPic,CANVAS,width,height,white) #white was used for demo purposes
+def drawInventory(itemPic):
+  ## might need to clear image of last image if drawen
+  #for now, having images draw on top of eachother with a box frame the solution.
+  posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
+  posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
+  inventory = pyCopyIgnoreColor(itemPic,CANVAS,posX,posY,white) #white was used for demo purposes
+  
   repaint(CANVAS)
 
 
