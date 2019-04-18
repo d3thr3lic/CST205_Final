@@ -18,7 +18,6 @@ setMediaPathToCurrentDir()
 #Global Variables
 CANVAS = makeEmptyPicture(800,600)
 GAMERUNNING = True
-
 roomIn = ""
 
 
@@ -280,7 +279,7 @@ def displayInventory():
 ### attempting to generalize for all items in a list. has issues, only takes in first element of list.
 ### can easily be hard coded in a list to draw on screen by calling drawInventory() with the item's picture
 ###
-  inventory = ['one','two','three'] ## items in inventory for purposes of demo
+  inventory = ["one", "two", "three"]
   if len(inventory) == 0: ## if inventory is empty, will handle case
     showInformation("You do not have any items in your inventory")
     whichRoom()
@@ -290,17 +289,16 @@ def displayInventory():
     
     if invInput == 'leave':
        whichRoom()
-        
-    for item in inventory:
-      if invInput != item:
-        showInformation("You do not have that item.")
-        break
-      elif invInput == item:        
-        itemPic = makePicture(getMediaPath() + item + ".png") #takes in item image
+     
+    for item in inventory: 
+      if invInput in inventory:
+        itemPic = makePicture(getMediaPath() + invInput + ".png") #takes in item image
         posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
         posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
         drawInventory(itemPic,posX,posY)
-        break    
+      else:      
+        showInformation("You do not have that item.")
+        
  
     
 def drawInventory(itemPic,width,height):
