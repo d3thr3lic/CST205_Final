@@ -287,20 +287,20 @@ def displayInventory():
     invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
     #repaint(CANVAS)#clears screen so if multiple items are looked at on screen, it will not overlap
     
-    if invInput == 'leave':
+  if invInput == 'leave':
        whichRoom()
      
-    for item in inventory: 
-      if invInput in inventory:
-        itemPic = makePicture(getMediaPath() + invInput + ".png") #takes in item image
-        posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
-        posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
-        text = "This should display " + invInput + "'s description from the dictionary"
-        whiteText(text)
-        drawInventory(itemPic,posX,posY)
-        whichRoom()
-      else:      
-        showInformation("You do not have that item.")
+  for item in inventory: 
+    if invInput in inventory:
+      itemPic = makePicture(getMediaPath() + invInput + ".png") #takes in item image
+      posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
+      posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
+      text = "This should display " + invInput + "'s description from the dictionary"
+      whiteText(text)
+      drawInventory(itemPic,posX,posY)
+      whichRoom()
+    else:      
+      showInformation("You do not have that item.")
         
  
     
