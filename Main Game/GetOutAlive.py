@@ -367,9 +367,9 @@ class houseRooms:
   # attributes: currentRoom, rooms
   def __init__(self, startingRoom):
     self.currentRoom = startingRoom
-    self.rooms = getRooms()
+    self.getRooms()
   
-  def getRooms():
+  def getRooms(self):
   #             Map of home
   #                  N
   #                W + E
@@ -399,23 +399,23 @@ class houseRooms:
   #  |Master Bedroom _ Billiard Room  |
   #  |               |down Living Room|
   #  |--------------------------------|
-    rooms = dict()
+    self.rooms = dict()
     # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
-    addRoom("basement", "", "", "", "", "library", "", rooms)
+    self.addRoom("basement", "", "", "", "", "library", "")
     # 2nd floor rooms
-    addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", rooms)
-    addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", rooms)
-    addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "", rooms)
-    addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", rooms)
+    self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "")
+    self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room")
+    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "")
+    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "")
     # 1st floor rooms
-    addRoom("kitchen", "", "library", "", "dining room", "", "", rooms)
-    addRoom("dining room", "", "living room", "kitchen", "", "", "", rooms)
-    addRoom("library", "kitchen", "", "", "living room", "", "basement", rooms)
-    addRoom("living room", "dining room", "", "library", "", "billiard room", "", rooms)
-    return rooms
+    self.addRoom("kitchen", "", "library", "", "dining room", "", "")
+    self.addRoom("dining room", "", "living room", "kitchen", "", "", "")
+    self.addRoom("library", "kitchen", "", "", "living room", "", "basement")
+    self.addRoom("living room", "dining room", "", "library", "", "billiard room", "")
+    #return rooms
   
-  def addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary):
-    roomsDictionary[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
+  def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown):
+    self.rooms[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
   
   def changeRoom(self, direction, visual):
     newRoom = self.tryDirection(direction)
