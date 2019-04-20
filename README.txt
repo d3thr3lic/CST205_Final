@@ -1,5 +1,5 @@
 Main Plot-point:
-The user/character was breaking into this house to steal some cash from a known illicit drug dealer, and was ambushed by one or more of them while 
+The user/character was breaking into this house to steal some cash from a known illicit arms dealer, and was ambushed by one or more of them while 
 in the process.. he had help from an insider who knew the house and dealers, which gave him the the access to get inside in the first place, and
 the clue for the way out in the basement.  Upon waking up in the starting room, the user now needs to just get out alive by any means necessary, as 
 it's just a matter of time before the dealers/killers come back and finish him off.
