@@ -42,8 +42,8 @@ def main():
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
       house.changeRoom(userCmd, visual)
-    #elif userCmd == "inventory":
-      #visual.displayInventory() #TODO: calling inventory through commands
+    elif userCmd == "2":
+      visual.displayInventory()
       
       
       
@@ -318,7 +318,7 @@ class visuals:
     self.whiteText(text)
   
   #######For inventory
-  def displayInventory():
+  def displayInventory(self):
     inventory = ["king", "queen", "ace","paper","book"] ## for testing purposes, delete once connected to game inventory system
    
     if len(inventory) == 0: ## if inventory is empty, will handle case
@@ -334,22 +334,21 @@ class visuals:
     #for item in inventory: 
     if invInput in inventory:
       itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
-      posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
-      posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
-      text = "This should display " + invInput + "'s description from the dictionary"
-      whiteText(text)
-      drawInventory(itemPic,posX,posY)
-      whichRoom()
+      posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
+      posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
+      text = "This should display " + invInput + "'s description from the dictionary (Use key's values in Dict)"
+      self.whiteText(text)
+      self.drawInventory(itemPic,posX,posY)
     else:      
       showInformation("You do not have that item.")
          
-  def drawInventory(itemPic,width,height):
-    inventory = pyCopyIgnoreColor(itemPic,CANVAS,width,height,green) 
+  def drawInventory(self,itemPic,width,height):
+    inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
     #green was used items that need to not be square
-    repaint(CANVAS) 
+    repaint(self.canvas) 
 
   #copys images of items onto screen, ignores specfied color.
-  def pyCopyIgnoreColor(source, target,targetX,targetY,colorToIgnore):
+  def pyCopyIgnoreColor(self,source, target,targetX,targetY,colorToIgnore):
     sWidth = getWidth(source)
     sHeight = getHeight(source)
     tWidth = getWidth(target)
