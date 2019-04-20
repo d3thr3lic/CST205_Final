@@ -7,58 +7,44 @@
 ## Nicholas Saunders
 ## Ramon Lucindo
 
-#################################################Code below is from lab 12
-
-
-#             Map of home
-#                  N
-#                W + E
-#                  S
-#  |--------------------------------|
-#  |               |                |
-#  |Dining Room #5 _   Bed Room #4  |
-#  |               |                |
-#  |------- |------|-------- |------|
-#  |               | Living Room #2 |
-#  |  Kitchen # 3  _                |
-#  |               |-------- |------|
-#  |               |  Mud Room #1   |
-#  |----------------------|  |------|
-GAMERUNNING = True #global variable gives the ability to allow other functions
-                   #to terminate game
+import os
+# Global Variables
+#global GAMERUNNING = True
+#global CANVAS = makeEmptyPicture(800,600)
 
 # driver
-def game():#---------------------------------------------------------------------------------------------------
-  #by default, player starts in room 1
+def main():#---------------------------------------------------------------------------------------------------
+  setMediaPathToCurrentDir()
+  # game settings
+  # TODO: username
+  startingRoom = "living room"
   global GAMERUNNING
-  roomIn = 1
-
-  printNow(welcomeMsg(roomIn))
-  printNow(roomDescription(roomIn))
-
-  # dictionary to store name / value pairs of required items user needs to obtain in order to finish game
-  allItems = {'medallion':'This medallion has been carved in the shape of a lionhead.\n'+\
-              "You notice a strange aura that makes you feel safe.",\
-              'key':'This key is oddly-shaped like a spade of hearts.'}
-  inventory = []
-  #medallion is a ward that keeps monster from killing you
-  #key is to open a hidden trap door into the room with a monster but also the place to exit
-
+  GAMERUNNING = true
+  visual = visuals()
+  if not visual.welcome():
+    GAMERUNNING = false
+  if GAMERUNNING and not visual.instructions():
+    GAMERUNNING = false
+  
+  if GAMERUNNING:
+    poorSoul = player("Sucks to be Me") # TODO: add userName
+    room = houseRooms(startingRoom, getRooms())
+    visual.paintRoom(room.houseRooms[startingRoom])
+    
   while GAMERUNNING:
-    userCmd = requestString("What do you want to do next?\nType 'Help' for commands.")
-    printNow(userCmd)
+    userCmd = requestString("What would you like to do?\n'1' for commands.\n'2' to view Inventory.")
     if len(userCmd) > 0:
       userCmd = userCmd.lower()
     else:
       #user entered nothing, ask again
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
-      oldRoom = roomIn
-      roomIn = move(userCmd, roomIn)
-      if oldRoom != roomIn:
-        printNow(roomDescription(roomIn))
-      else:
-        printNow("You cannot move that direction.")
+      room.changeRoom(userCmd, visual)
+      
+      
+      
+      
+      
     elif userCmd in spMoveCommands():
       spMove(userCmd, roomIn, inventory)
     elif userCmd in controlCommands():
@@ -104,7 +90,7 @@ def otherCommand(str, roomIn, inventory, allItems):#----------------------------
 
 # valid moves: north, south, east, and west
 def movementCommands():#---------------------------------------------------------------------------------------------------
-  validCommands = ['n', 's', 'e', 'w']
+  validCommands = ['n', 's', 'e', 'w', 'u', 'd']
   return validCommands
 
 # specific valid moves
@@ -140,110 +126,6 @@ def examineItem(inventory, allItems):#------------------------------------------
   else:
     printNow("You do not have any items in inventory.")
 
-# provides a description of each room
-def roomDescription(roomIn):#---------------------------------------------------------------------------------------------------
-  #all room definintions/descriptions go here
-  output = ""
-  if roomIn == 1:
-    output = "---------- MUDROOM ---------\n" + \
-              "You are in the mudroom.\n" + \
-              "This room is full of dirty clothes and shoes, nothing else to note.\n" + \
-              "The living room is through the North door.\n" + \
-              "The exit to the house is through the Southern door, but it will not open."
-  elif roomIn == 2:
-    output = "-------- LIVING ROOM -------\n" + \
-              "You are in the living room.\n" + \
-              "This room contains common furniture, a television, and a fireplace.\n" + \
-              "The wooden floor in this room makes it a perfect place to dance on.\n" + \
-              "The bedroom is through the North door.\n" + \
-              "The mudroom is through the South door.\n" + \
-              "The kitchen is through the West door."
-  elif roomIn == 3:
-    output = "---------- KITCHEN ---------\n" + \
-              "You are in the kitchen.\n" + \
-              "This looks like it was straight out of the 60's.\n" + \
-              "The dining room is through the North door.\n" + \
-              "The living room is through the East door."
-  elif roomIn == 4:
-    output = "--------- BEDROOM ---------\n" + \
-              "You are in the bedroom.\n" + \
-              "It contains a small desk and a neatly made queen-sized bed, which looks tempting to jump on.\n" + \
-              "The living room is through the South door.\n" + \
-              "The dining room is through the West door."
-  elif roomIn == 5:
-    output = "-------- DINING ROOM -------\n" + \
-              "You are in the dining room.\n" + \
-              "This must be where they eat food. There are four chairs surrounding an empty table.\n" + \
-              "The floor near the table appears to be slippery. Try not to fall.\n"+\
-              "Or do...\n" + \
-              "The bedroom is through the East door.\n" + \
-              "The kitchen is through the South door."
-  return output
-
-# generates welcome message, description of movement commands and provides other commands 
-def welcomeMsg(roomIn):#---------------------------------------------------------------------------------------------------
-  output = "----------------------------------------------\n" + \
-           "--------Welcome to my game-------- \n"+ \
-           "----------------------------------------------\n" + \
-           "Please enter a direction to navigate thoughout the envrionment.\n"+ \
-           "You are allowed to move by typing 'n' for North, 's' for South, 'e' for East, and 'w' for West.\n"+ \
-           "To see a list of commands, type 'commands'.\n" + \
-           "To get help or quit the game, type 'help' or 'exit'."
-  return output
-
-# move player based on direction and specified room
-def move(direction, roomIn):#---------------------------------------------------------------------------------------------------
-  #This function will change the room number that the player is currently in
-  #by taking the user input as a direction, and figuring out if the direction
-  #entered is a valid direction, and then making a change to the global
-  #variable roomIn if that move was valid.
-  #
-  #             Map of home
-  #                  N
-  #                W + E
-  #                  S
-  #  |--------------------------------|
-  #  |               |                |
-  #  |Dining Room #5 _   Bed Room #4  |
-  #  |               |                |
-  #  |------- |------|-------- |------|
-  #  |               | Living Room #2 |
-  #  |  Kitchen # 3  _                |
-  #  |               |-------- |------|
-  #  |               |  Mud Room #1   |
-  #  |----------------------|  |------|
-
-  if roomIn == 1:
-    if direction == "n":
-      roomIn = 2
-
-  elif roomIn == 2:
-    if direction == "n":
-      roomIn = 4
-    elif direction == "s":
-      roomIn = 1
-    elif direction == "w":
-      roomIn = 3
-
-  elif roomIn == 3:
-    if direction == "n":
-      roomIn = 5
-    elif direction == "e":
-      roomIn = 2
-
-  elif roomIn == 4:
-    if direction == "s":
-      roomIn = 2
-    elif direction == "w":
-      roomIn = 5
-
-  elif roomIn == 5:
-    if direction == "e":
-      roomIn = 4
-    elif direction == "s":
-      roomIn = 3
-
-  return roomIn
 
 # lists different types of commands or movements 
 def listCommands():
@@ -359,3 +241,203 @@ def laugh(roomIn):
     printNow("Kinda weird that you're laughing right now...")
 
 
+  
+
+# ====================================== general functions =================================================
+def setMediaPathToCurrentDir():
+  fullPathToFile = os.path.abspath(__file__)
+  filePathForAssets = os.path.dirname(fullPathToFile) + '\Assets'
+  # TODO: have Nick fix this logic (I added the \Assets)
+  if fullPathToFile.startswith('/'):
+    setMediaPath(filePathForAssets)
+  else:
+    setMediaPath(filePathForAssets + '\\')
+    
+def getRooms():
+  #             Map of home
+  #                  N
+  #                W + E
+  #                  S
+  #  Basement
+  #  |---------------|
+  #  |   Basement    |
+  #  |  up Library   |
+  #  |---------------|
+  #  1st Floor
+  #  |--------------------------------|
+  #  |               |                |
+  #  |    Kitchen    _   Dining Room  |
+  #  |               |                |
+  #  |------- |------|-------- |------|
+  #  |               |                | 
+  #  |    Library    _   Living Room  |
+  #  | down basement |up Billiard Room|
+  #  |----------------------|  |------|
+  #  2nd Floor
+  #  |--------------------------------|
+  #  |               |                |
+  #  |   Bathroom    _     Bedroom    |
+  #  |               |                |
+  #  |------- |------|-------- |------|
+  #  |               |                | 
+  #  |Master Bedroom _ Billiard Room  |
+  #  |               |down Living Room|
+  #  |--------------------------------|
+  rooms = dict()
+  # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
+  addRoom("basement", "", "", "", "", "library", "", rooms)
+  # 2nd floor rooms
+  addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", rooms)
+  addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", rooms)
+  addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "", rooms)
+  addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", rooms)
+  # 1st floor rooms
+  addRoom("kitchen", "", "library", "", "dining room", "", "", rooms)
+  addRoom("dining room", "", "living room", "kitchen", "", "", "", rooms)
+  addRoom("library", "kitchen", "", "", "living room", "", "basement", rooms)
+  addRoom("living room", "dining room", "", "library", "", "billiard room", "", rooms)
+  return rooms
+  
+def addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary):
+  roomsDictionary[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
+
+
+# ********************************************** visuals **************************************************
+class visuals:
+# Represents the current picture being displayed
+# attributes: canvas 
+  def __init__(self):
+    self.canvas = makeEmptyPicture(800,600)
+    
+  def welcome(self):
+    title = makePicture(getMediaPath() + "title.jpg")
+    copyInto(title,self.canvas,0,0)
+    repaint(self.canvas)
+    userInput = requestString("Would you like to play? Y or N?")
+    userInput = userInput.lower()
+    if userInput != "y" and userInput != "n":
+      showInformation("You made an invalid entry.")
+      self.welcome()
+    elif userInput == "y":
+      return true
+    else:
+      return false
+
+  def instructions(self):
+    rules = makePicture(getMediaPath() + "rules.jpg")
+    copyInto(rules, self.canvas, 0, 0)
+    repaint(self.canvas)
+    userInput = requestString("Would you like to continue? Y or N?")
+    userInput = userInput.lower()
+    if userInput == "y":
+      return true
+    elif userInput == "n":
+      return false
+    else:
+      showInformation("You made an invalid entry.")
+      self.instructions()
+      
+  def paintRoom(self, room):
+    roomToPaint = makePicture(room.picture)
+    copyInto(roomToPaint, self.canvas, 0, 0)
+    repaint(self.canvas)
+    text = "This room is the " + room.picture[len(getMediaPath()):-4] # 4 characters for .jpg
+    # could have added room name to class, but thought this was a good use of substrings
+    text += room.getDoors()
+    self.whiteText(text)
+    
+  ######## Text related functions
+  def textBox(self):
+    addRectFilled(self.canvas, 50, 480, 700, 100, black)
+  
+  def whiteText(self, text):
+    self.textBox()
+    lines = text.split('\n')
+    y = 500
+    for line in lines:
+      addText(self.canvas, 75, y, line, white)
+      y += 12 # line spacing
+      repaint(self.canvas)
+    
+  
+# --------------------------------------------- sounds --------------------------------------------------
+
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Classes ++++++++++++++++++++++++++++++++++++++++++++++++++++
+class player:
+  # Represents the character in the game
+  # attributes: 
+  def __init__(self, name):
+    self.name = name
+    
+  
+  
+class houseRooms:
+  # Represents the rooms in the house
+  # attributes: 
+  def __init__(self, startingRoom, roomsDictionary):
+    self.currentRoom = startingRoom
+    self.houseRooms = roomsDictionary
+    
+  def changeRoom(self, direction, visual):
+    newRoom = self.tryDirection(direction)
+    if newRoom != self.currentRoom and newRoom != "":
+      self.currentRoom = newRoom
+      visual.paintRoom(self.houseRooms[newRoom])
+  
+  def tryDirection(self, direction):
+    newRoom = ""
+    currentRoom = self.houseRooms[self.currentRoom]
+    if direction == 'n':
+      newRoom = currentRoom.north
+    elif direction == 's':
+      newRoom = currentRoom.south
+    elif direction == 'e':
+      newRoom = currentRoom.east
+    elif direction == 'w':
+      newRoom = currentRoom.west
+    elif direction == 'u':
+      newRoom = currentRoom.stairsUp
+    elif direction == 'd':
+      newRoom = currentRoom.stairsDown
+    return newRoom    
+
+class singleRoom:
+  # Represents a room
+  # attribute: picture, north, south, west, east, upDown
+  def __init__(self, picture, north, south, west, east, stairsUp, stairsDown):
+    self.picture = picture
+    self.north = north
+    self.south = south
+    self.west = west
+    self.east = east
+    self.stairsUp = stairsUp
+    self.stairsDown = stairsDown
+    
+  def __str__(self):
+    return self.picture
+    
+  def getDoors(self):
+    doorLocations = ""
+    if self.north != "":
+      doorLocations += "\nn: " + self.north
+    if self.south != "":
+      doorLocations += "\ns: " + self.south
+    if self.west != "":
+      doorLocations += "\nw: " + self.west
+    if self.east != "":
+      doorLocations += "\ne: " + self.east
+    if self.stairsUp != "":
+      doorLocations += "\nu: " + self.stairsUp
+    if self.stairsDown != "":
+      doorLocations += "\nd: " + self.stairsDown
+    return doorLocations
+    
+    
+class items:
+  # Represents character items
+  # attributes:
+  def __init__(self, item):
+    self.addItem(item) 
+  
+#class actions:
+  # Represents character actions
