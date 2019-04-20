@@ -270,27 +270,33 @@ class visuals:
     
   def welcome(self):
     self.paintTile("title")
-    userInput = requestString("Would you like to play? Y or N?")
-    userInput = userInput.lower()
-    if userInput != "y" and userInput != "n":
-      showInformation("You made an invalid entry.")
-      self.welcome()
-    elif userInput == "y":
-      return true
+    notValid = true
+    while notValid:
+      userInput = requestString("Would you like to play? Y or N?")
+      userInput = userInput.lower()
+      if userInput != "y" and userInput != "n":
+        showInformation("You made an invalid entry.")
+      else:
+        notValid = false
+    if userInput == "y":
+        return true
     else:
       return false
 
   def instructions(self):
     self.paintTile("rules")
-    userInput = requestString("Would you like to continue? Y or N?")
-    userInput = userInput.lower()
+    notValid = true
+    while notValid:
+      userInput = requestString("Would you like to continue? Y or N?")
+      userInput = userInput.lower()
+      if userInput != "y" and userInput != "n":
+        showInformation("You made an invalid entry.")
+      else:
+        notValid = false
     if userInput == "y":
-      return true
-    elif userInput == "n":
-      return false
+        return true
     else:
-      showInformation("You made an invalid entry.")
-      self.instructions()
+      return false
       
   def paintTile(self, tile):
     newCanvas = makePicture(getMediaPath() + tile + ".jpg")
