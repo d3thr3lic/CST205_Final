@@ -253,12 +253,12 @@ def laugh(roomIn):
 # ====================================== general functions =================================================
 def setMediaPathToCurrentDir():
   fullPathToFile = os.path.abspath(__file__)
-  filePathForAssets = os.path.dirname(fullPathToFile) + '\Assets'
+  filePathForAssets = os.path.dirname(fullPathToFile) #+ '\Assets'
   # TODO: have Nick fix this logic (I added the \Assets)
   if fullPathToFile.startswith('/'):
-    setMediaPath(filePathForAssets)
+    setMediaPath(filePathForAssets + "/Assets/")
   else:
-    setMediaPath(filePathForAssets + '\\')
+    setMediaPath(filePathForAssets + '\\Assets\\')
 
 
 # ********************************************** visuals **************************************************
@@ -485,4 +485,4 @@ class items:
     self.addItem(item) 
   
 #class actions:
-  # Represents character actions
+  # Represents character actions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
