@@ -8,53 +8,60 @@
 ## Ramon Lucindo
 
 import os
-# Global Variables
-#global GAMERUNNING = True
-#global CANVAS = makeEmptyPicture(800,600)
+import time
 
-# driver
-def main():#---------------------------------------------------------------------------------------------------
+def main():
+  global GAMERUNNING
+  GAMERUNNING = true
   setMediaPathToCurrentDir()
+  
   # game settings
   # TODO: username
   startingRoom = "living room"
-  global GAMERUNNING
-  GAMERUNNING = true
-  visual = visuals()
-  if not visual.welcome():
-    GAMERUNNING = false
-  if GAMERUNNING and not visual.instructions():
-    GAMERUNNING = false
   
-  if GAMERUNNING:
+  visual = visuals()
+  sound = gameSounds()
+  sound.startMusic()
+  if not visual.welcome() or not visual.instructions():
+    # user said don't continue
+    GAMERUNNING = false
+    visual.paintTile("noPlay")
+    time.sleep(3) # wait to paint the next canvas
+  else:
     poorSoul = player("Sucks to be Me") # TODO: add userName
-    room = houseRooms(startingRoom, getRooms())
-    visual.paintRoom(room.houseRooms[startingRoom])
+    house = houseRooms(startingRoom)
+    visual.paintRoom(house.rooms[startingRoom])
     
   while GAMERUNNING:
-    userCmd = requestString("What would you like to do?\n'1' for commands.\n'2' to view Inventory.")
+    sound.continueMusic()
+    userCmd = requestString("What would you like to do?\n'1' for commands.\n'2' to view Inventory.\n'quit' if you're scared.")
     if len(userCmd) > 0:
       userCmd = userCmd.lower()
     else:
       #user entered nothing, ask again
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
-      room.changeRoom(userCmd, visual)
+      house.changeRoom(userCmd, visual)
       
       
       
       
-      
+    # haven't reached this yet  
     elif userCmd in spMoveCommands():
       spMove(userCmd, roomIn, inventory)
     elif userCmd in controlCommands():
       otherCommand(userCmd, roomIn, inventory, allItems)
-    elif userCmd == "exit":
+    elif userCmd == "quit":
       GAMERUNNING = False
-      printNow("\nYou are a quitter.\n")
+      printNow("\nYou are a wuss.\n")
     else:
       printNow("I do not know that command.")
-
+  # end main() while loop
+  visual.paintTile("group9")
+  time.sleep(6)    
+  sound.stopMusic()
+# end main() -----------------------------------------------------------------------------------------------------------------------  
+  
 # specific moves within specified room with current inventory of items on player
 def spMove(userCmd, roomIn, inventory):#-------------------------------------------------------------------------------------------------------
   if userCmd == "jump":
@@ -252,8 +259,117 @@ def setMediaPathToCurrentDir():
     setMediaPath(filePathForAssets)
   else:
     setMediaPath(filePathForAssets + '\\')
+
+
+# ********************************************** visuals **************************************************
+class visuals:
+# Represents the current picture being displayed
+# attributes: canvas 
+  def __init__(self):
+    self.canvas = makeEmptyPicture(800,600)
     
-def getRooms():
+  def welcome(self):
+    self.paintTile("title")
+    userInput = requestString("Would you like to play? Y or N?")
+    userInput = userInput.lower()
+    if userInput != "y" and userInput != "n":
+      showInformation("You made an invalid entry.")
+      self.welcome()
+    elif userInput == "y":
+      return true
+    else:
+      return false
+
+  def instructions(self):
+    self.paintTile("rules")
+    userInput = requestString("Would you like to continue? Y or N?")
+    userInput = userInput.lower()
+    if userInput == "y":
+      return true
+    elif userInput == "n":
+      return false
+    else:
+      showInformation("You made an invalid entry.")
+      self.instructions()
+      
+  def paintTile(self, tile):
+    newCanvas = makePicture(getMediaPath() + tile + ".jpg")
+    self.paintCanvas(newCanvas)
+  
+  def paintCanvas(self, picture):
+    copyInto(picture, self.canvas, 0, 0)
+    repaint(self.canvas)
+                          
+  def paintRoom(self, room):
+    roomToPaint = makePicture(room.picture)
+    self.paintCanvas(roomToPaint)
+    text = "This room is the " + room.picture[len(getMediaPath()):-4] # 4 characters for .jpg
+    # could have added room name to class, but thought this was a good use of substrings
+    text += room.getDoors()
+    self.whiteText(text)
+    
+  ######## Text related functions
+  def textBox(self):
+    addRectFilled(self.canvas, 50, 480, 700, 100, black)
+  
+  def whiteText(self, text):
+    self.textBox()
+    lines = text.split('\n')
+    y = 500
+    for line in lines:
+      addText(self.canvas, 75, y, line, white)
+      y += 12 # line spacing
+      repaint(self.canvas)
+     
+# --------------------------------------------- sounds --------------------------------------------------
+class gameSounds:
+  bGTimeStarted = 0
+  
+  def __init__(self, bGTrack = makeEmptySound(1)):
+    self.bGTrack = bGTrack
+    
+  #SOUND EFFECTS
+  def soundEffect(self, sound):
+    trackPath = getMediaPath() + sound + ".wav"
+    track = makeSound(trackPath)
+    play(track)
+
+  #BACKGROUND MUSIC FUNCTIONS
+  def startMusic(self):
+    trackPath = getMediaPath() + "main.wav"
+    self.bGTrack = makeSound(trackPath)
+    self.bGTimeStarted = time.time()
+    play(self.bGTrack)
+  
+  #checks the song duration and the last time that it was started
+  #then calls the startBgMusic() if is isn't playing any longer
+  #this can be called in lou of calling startBgMusic() completely, even for the first time
+  def continueMusic(self):
+    songDuration = getDuration(self.bGTrack)
+    now = time.time()
+    timePassed = now - self.bGTimeStarted
+    if timePassed > songDuration:
+      self.startMusic()
+      
+  def stopMusic(self):
+    stopPlaying(self.bGTrack)
+    
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Classes ++++++++++++++++++++++++++++++++++++++++++++++++++++
+class player:
+  # Represents the character in the game
+  # attributes: name, inventoryDictionary
+  def __init__(self, name):
+    self.name = name
+    #self.inventoryDictionary = inventoryDictionary
+     
+class houseRooms:
+  # Represents the rooms in the house and the current room
+  # attributes: currentRoom, rooms
+  def __init__(self, startingRoom):
+    self.currentRoom = startingRoom
+    self.rooms = getRooms()
+  
+  def getRooms():
   #             Map of home
   #                  N
   #                W + E
@@ -283,110 +399,33 @@ def getRooms():
   #  |Master Bedroom _ Billiard Room  |
   #  |               |down Living Room|
   #  |--------------------------------|
-  rooms = dict()
-  # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
-  addRoom("basement", "", "", "", "", "library", "", rooms)
-  # 2nd floor rooms
-  addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", rooms)
-  addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", rooms)
-  addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "", rooms)
-  addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", rooms)
-  # 1st floor rooms
-  addRoom("kitchen", "", "library", "", "dining room", "", "", rooms)
-  addRoom("dining room", "", "living room", "kitchen", "", "", "", rooms)
-  addRoom("library", "kitchen", "", "", "living room", "", "basement", rooms)
-  addRoom("living room", "dining room", "", "library", "", "billiard room", "", rooms)
-  return rooms
+    rooms = dict()
+    # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
+    addRoom("basement", "", "", "", "", "library", "", rooms)
+    # 2nd floor rooms
+    addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", rooms)
+    addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", rooms)
+    addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "", rooms)
+    addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", rooms)
+    # 1st floor rooms
+    addRoom("kitchen", "", "library", "", "dining room", "", "", rooms)
+    addRoom("dining room", "", "living room", "kitchen", "", "", "", rooms)
+    addRoom("library", "kitchen", "", "", "living room", "", "basement", rooms)
+    addRoom("living room", "dining room", "", "library", "", "billiard room", "", rooms)
+    return rooms
   
-def addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary):
-  roomsDictionary[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
-
-
-# ********************************************** visuals **************************************************
-class visuals:
-# Represents the current picture being displayed
-# attributes: canvas 
-  def __init__(self):
-    self.canvas = makeEmptyPicture(800,600)
-    
-  def welcome(self):
-    title = makePicture(getMediaPath() + "title.jpg")
-    copyInto(title,self.canvas,0,0)
-    repaint(self.canvas)
-    userInput = requestString("Would you like to play? Y or N?")
-    userInput = userInput.lower()
-    if userInput != "y" and userInput != "n":
-      showInformation("You made an invalid entry.")
-      self.welcome()
-    elif userInput == "y":
-      return true
-    else:
-      return false
-
-  def instructions(self):
-    rules = makePicture(getMediaPath() + "rules.jpg")
-    copyInto(rules, self.canvas, 0, 0)
-    repaint(self.canvas)
-    userInput = requestString("Would you like to continue? Y or N?")
-    userInput = userInput.lower()
-    if userInput == "y":
-      return true
-    elif userInput == "n":
-      return false
-    else:
-      showInformation("You made an invalid entry.")
-      self.instructions()
-      
-  def paintRoom(self, room):
-    roomToPaint = makePicture(room.picture)
-    copyInto(roomToPaint, self.canvas, 0, 0)
-    repaint(self.canvas)
-    text = "This room is the " + room.picture[len(getMediaPath()):-4] # 4 characters for .jpg
-    # could have added room name to class, but thought this was a good use of substrings
-    text += room.getDoors()
-    self.whiteText(text)
-    
-  ######## Text related functions
-  def textBox(self):
-    addRectFilled(self.canvas, 50, 480, 700, 100, black)
+  def addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary):
+    roomsDictionary[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
   
-  def whiteText(self, text):
-    self.textBox()
-    lines = text.split('\n')
-    y = 500
-    for line in lines:
-      addText(self.canvas, 75, y, line, white)
-      y += 12 # line spacing
-      repaint(self.canvas)
-    
-  
-# --------------------------------------------- sounds --------------------------------------------------
-
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Classes ++++++++++++++++++++++++++++++++++++++++++++++++++++
-class player:
-  # Represents the character in the game
-  # attributes: 
-  def __init__(self, name):
-    self.name = name
-    
-  
-  
-class houseRooms:
-  # Represents the rooms in the house
-  # attributes: 
-  def __init__(self, startingRoom, roomsDictionary):
-    self.currentRoom = startingRoom
-    self.houseRooms = roomsDictionary
-    
   def changeRoom(self, direction, visual):
     newRoom = self.tryDirection(direction)
     if newRoom != self.currentRoom and newRoom != "":
       self.currentRoom = newRoom
-      visual.paintRoom(self.houseRooms[newRoom])
+      visual.paintRoom(self.rooms[newRoom])
   
   def tryDirection(self, direction):
     newRoom = ""
-    currentRoom = self.houseRooms[self.currentRoom]
+    currentRoom = self.rooms[self.currentRoom]
     if direction == 'n':
       newRoom = currentRoom.north
     elif direction == 's':
