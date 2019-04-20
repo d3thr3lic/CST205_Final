@@ -279,7 +279,7 @@ def displayInventory():
 ### attempting to generalize for all items in a list. has issues, only takes in first element of list.
 ### can easily be hard coded in a list to draw on screen by calling drawInventory() with the item's picture
 ###
-  inventory = ["one", "two", "three"]
+  inventory = ["king", "queen", "ace","paper","book"]
   if len(inventory) == 0: ## if inventory is empty, will handle case
     showInformation("You do not have any items in your inventory")
     whichRoom()
@@ -292,7 +292,7 @@ def displayInventory():
      
   #for item in inventory: 
   if invInput in inventory:
-    itemPic = makePicture(getMediaPath() + invInput + ".png") #takes in item image
+    itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
     posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
     posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
     text = "This should display " + invInput + "'s description from the dictionary"
@@ -305,7 +305,7 @@ def displayInventory():
  
     
 def drawInventory(itemPic,width,height):
-  inventory = pyCopyIgnoreColor(itemPic,CANVAS,width,height,white) #white was used for demo purposes
+  inventory = pyCopyIgnoreColor(itemPic,CANVAS,width,height,green) #white was used for demo purposes
   repaint(CANVAS)
 
 

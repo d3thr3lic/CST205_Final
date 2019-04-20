@@ -42,6 +42,8 @@ def main():
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
       house.changeRoom(userCmd, visual)
+    #elif userCmd == "inventory":
+      #visual.displayInventory() #TODO: calling inventory through commands
       
       
       
@@ -127,6 +129,7 @@ def examineItem(inventory, allItems):#------------------------------------------
   if len(inventory) > 0:
     userCmd = requestString("What item do you want to examine?")
     if userCmd in inventory:
+      #visuals.displayInventory()
       printNow(allItems[userCmd])
     else:
       printNow("You do not have that item in inventory.")
@@ -313,6 +316,57 @@ class visuals:
     # could have added room name to class, but thought this was a good use of substrings
     text += room.getDoors()
     self.whiteText(text)
+  
+  #######For inventory
+  def displayInventory():
+    inventory = ["king", "queen", "ace","paper","book"] ## for testing purposes, delete once connected to game inventory system
+   
+    if len(inventory) == 0: ## if inventory is empty, will handle case
+      showInformation("You do not have any items in your inventory")
+      ##TODO: should return user back to general action prompt
+    else:
+      invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
+      ##some what redudant with examineItem()
+      
+    if invInput == 'leave':
+       return True ##TODO: should return user back to general action prompt
+     
+    #for item in inventory: 
+    if invInput in inventory:
+      itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
+      posX = getWidth(CANVAS)/2-getWidth(itemPic)/2
+      posY = getHeight(CANVAS)/2-getHeight(itemPic)/2
+      text = "This should display " + invInput + "'s description from the dictionary"
+      whiteText(text)
+      drawInventory(itemPic,posX,posY)
+      whichRoom()
+    else:      
+      showInformation("You do not have that item.")
+         
+  def drawInventory(itemPic,width,height):
+    inventory = pyCopyIgnoreColor(itemPic,CANVAS,width,height,green) 
+    #green was used items that need to not be square
+    repaint(CANVAS) 
+
+  #copys images of items onto screen, ignores specfied color.
+  def pyCopyIgnoreColor(source, target,targetX,targetY,colorToIgnore):
+    sWidth = getWidth(source)
+    sHeight = getHeight(source)
+    tWidth = getWidth(target)
+    tHeight = getHeight(target)
+  
+    for x in range(0, sWidth):
+      for y in range(0, sHeight):
+        oldPix = getPixel(source, x, y)
+        newX = x + targetX
+        newY = y + targetY
+        #this will allow me to have some of the photos leave the frame a little bit without crashing
+        if (newX < tWidth) and (newX >= 0) and (newY < tHeight) and (newY >= 0):
+          if getColor(oldPix) != colorToIgnore:
+            newPix = getPixel(target, newX, newY)
+            setColor(newPix, getColor(oldPix))
+    return target    
+    
     
   ######## Text related functions
   def textBox(self):
