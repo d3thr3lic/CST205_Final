@@ -399,12 +399,14 @@ class visuals:
       repaint(self.canvas)
   
   def fitTextBox(self, text, boxLength):
-    charPerLine = int(boxLength / 5.8)
+    charPerLine = int(boxLength / 5.9)
     smallLines = []
     delimiter = " "
     for line in text:    
       while len(line) > charPerLine:
-        breakPoint = line.find(delimiter, charPerLine)   
+        breakPoint = line.find(delimiter, charPerLine)
+        if breakPoint == -1:
+          break   
         smallLines.append(line[0:breakPoint])
         line = line[breakPoint + 1:len(line)]
       smallLines.append(line)
