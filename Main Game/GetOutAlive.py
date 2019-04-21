@@ -41,10 +41,9 @@ def main():
       #user entered nothing, ask again
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
-      house.changeRoom(userCmd, visual)
+      house.changeRoom(userCmd, visual, sound)
     elif userCmd == "2":
-      visual.displayInventory()
-      
+      visual.displayInventory()  
       
       
       
@@ -129,7 +128,6 @@ def examineItem(inventory, allItems):#------------------------------------------
   if len(inventory) > 0:
     userCmd = requestString("What item do you want to examine?")
     if userCmd in inventory:
-      #visuals.displayInventory()
       printNow(allItems[userCmd])
     else:
       printNow("You do not have that item in inventory.")
@@ -256,12 +254,11 @@ def laugh(roomIn):
 # ====================================== general functions =================================================
 def setMediaPathToCurrentDir():
   fullPathToFile = os.path.abspath(__file__)
-  filePathForAssets = os.path.dirname(fullPathToFile) #+ '\Assets'
-  # TODO: have Nick fix this logic (I added the \Assets)
+  filePath = os.path.dirname(fullPathToFile)
   if fullPathToFile.startswith('/'):
-    setMediaPath(filePathForAssets + "/Assets/")
+    setMediaPath(filePath + "/Assets/")
   else:
-    setMediaPath(filePathForAssets + '\\Assets\\')
+    setMediaPath(filePath + '\\Assets\\')
 
 
 # ********************************************** visuals **************************************************
@@ -288,6 +285,9 @@ class visuals:
 
   def instructions(self):
     self.paintTile("rules")
+    time.sleep(3)
+    self.paintLongText("starting information")
+    time.sleep(6)
     notValid = true
     while notValid:
       userInput = requestString("Would you like to continue? Y or N?")
@@ -297,7 +297,7 @@ class visuals:
       else:
         notValid = false
     if userInput == "y":
-        return true
+      return true
     else:
       return false
       
@@ -365,21 +365,51 @@ class visuals:
             newPix = getPixel(target, newX, newY)
             setColor(newPix, getColor(oldPix))
     return target    
-    
-    
+        
   ######## Text related functions
-  def textBox(self):
-    addRectFilled(self.canvas, 50, 480, 700, 100, black)
+  def paintLongText(self, fileName):
+    lines = open(getMediaPath() + fileName + ".txt", 'r')
+    linesList = []
+    for line in lines:
+      linesList.append(line)
+    self.whiteText(linesList)
+  
+  def textBox(self, x, y, xLen, yLen):
+    addRectFilled(self.canvas, x, y, xLen, yLen, black)
   
   def whiteText(self, text):
-    self.textBox()
-    lines = text.split('\n')
-    y = 500
+    x = 50
+    xLen = 700
+    if isinstance(text, str):
+      y = 480
+      self.textBox(x, y, xLen, 100)  
+    else:
+      y = 50
+      self.textBox(x, y, xLen, 500)
+    typeIndent = 25
+    x += typeIndent
+    y += typeIndent
+    if not isinstance(text, list): # files already come in as lists
+      lines = text.split('\n')
+    else:
+      lines = self.fitTextBox(text, (xLen - (typeIndent * 2))) #indent on both sides
     for line in lines:
-      addText(self.canvas, 75, y, line, white)
+      addText(self.canvas, x, y, line, white)
       y += 12 # line spacing
       repaint(self.canvas)
-     
+  
+  def fitTextBox(self, text, boxLength):
+    charPerLine = int(boxLength / 5.8)
+    smallLines = []
+    delimiter = " "
+    for line in text:    
+      while len(line) > charPerLine:
+        breakPoint = line.find(delimiter, charPerLine)   
+        smallLines.append(line[0:breakPoint])
+        line = line[breakPoint + 1:len(line)]
+      smallLines.append(line)
+    return smallLines    
+      
 # --------------------------------------------- sounds --------------------------------------------------
 class gameSounds:
   bGTimeStarted = 0
@@ -476,7 +506,7 @@ class houseRooms:
   def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown):
     self.rooms[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
   
-  def changeRoom(self, direction, visual):
+  def changeRoom(self, direction, visual, sound):
     newRoom = self.tryDirection(direction)
     if newRoom != self.currentRoom and newRoom != "":
       self.currentRoom = newRoom
@@ -538,4 +568,4 @@ class items:
     self.addItem(item) 
   
 #class actions:
-  # Represents character actions                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+  # Represents character actions
