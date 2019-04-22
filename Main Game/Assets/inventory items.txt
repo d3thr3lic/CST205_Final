@@ -1,7 +1,7 @@
-Ace of Spades fuse$ This is a fuse.. in the shape of an Ace of Spades playing card?
-King of Spades fuse$ This is a fuse.. in the shape of a King of Spadesplaying card? I wonder what it is used for.
-Queen of Spades fuse $ This is a fuse.. in the shape of a Queen of Spades playing card?
-Ledger $ a ledger that has a list of contacts and numerous illegal weapons with dollar amounts associated to them
-Crumpled Note $ A crumpled note. It reads: "Don't forget to close and lock the window!"
-Mysterious Note $ a note from under bed, you appear to recognise the writting. It says: "Your cut will be 30% of the cash that you find! No less"
+Ace of Spades fuse $This is a fuse.. in the shape of an Ace of Spades playing card?
+King of Spades fuse $This is a fuse.. in the shape of a King of Spades playing card? I wonder what it is used for.
+Queen of Spades fuse $This is a fuse.. in the shape of a Queen of Spades playing card?
+Ledger $A ledger that has a list of contacts and numerous illegal weapons with dollar amounts associated to them
+Crumpled Note $A crumpled note. It reads: "Don't forget to close and lock the window!"
+Mysterious Note $A note, you appear to recognise the writing."Your cut will be 30% of the cash that you find! No less"
 

@@ -132,7 +132,8 @@ class visuals:
   def drawInventory(self,itemPic,width,height):
     inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
     #green was used items that need to not be square
-    repaint(self.canvas) 
+    repaint(self.canvas)
+    time.sleep(3)  
 
   #copys images of items onto screen, ignores specfied color.
   def pyCopyIgnoreColor(self,source, target,targetX,targetY,colorToIgnore):
@@ -181,7 +182,7 @@ class visuals:
     if not isinstance(text, list): # files already come in as lists
       lines = text.split('\n')
     else:
-      lines = self.fitTextBox(text, (xLen - (typeIndent * 2))) #indent on both sides
+      lines = self.fitTextBox(text, (xLen - (typeIndent * 5))) #indent on both sides
     for line in lines:
       addText(self.canvas, x, y, line, white)
       y += 12 # line spacing
@@ -369,8 +370,8 @@ class inventory:
     self.possibleItems = dict()
     for line in itemsFile:
       itemAndDefinition = line.split(delimiter)
-      self.possibleItems[itemAndDefinition[0].strip()] = itemAndDefinition[1].strip()
-  
+      #self.possibleItems[itemAndDefinition[0].strip()] = itemAndDefinition[1].strip()
+      #dict has issues with storing key:values
   def addItem(self, item):
     self.currentItems[item] = self.possibleItems.get(item)
     
