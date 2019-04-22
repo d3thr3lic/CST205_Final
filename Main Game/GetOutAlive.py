@@ -11,28 +11,21 @@ import os
 import time
 
 def main():
-  global GAMERUNNING
-  GAMERUNNING = true
   setMediaPathToCurrentDir()
   
   # game settings
-  # TODO: username
   startingRoom = "living room"
-  
+  house = houseRooms(startingRoom)
   visual = visuals()
   sound = gameSounds()
   sound.startMusic()
-  if not visual.welcome() or not visual.instructions():
-    # user said don't continue
-    GAMERUNNING = false
-    visual.paintTile("noPlay")
-    time.sleep(3) # wait to paint the next canvas
-  else:
-    poorSoul = player("Sucks to be Me") # TODO: add userName
-    house = houseRooms(startingRoom)
-    visual.paintRoom(house.rooms[startingRoom])
+  visual.welcome()
+  visual.instructions()
+  #visual.paintRoom(house.rooms[startingRoom])
+  poorSoul = player()
     
-  while GAMERUNNING:
+  while poorSoul.gameRunning:
+    visual.paintRoom(house.rooms[house.currentRoom])
     sound.continueMusic()
     userCmd = requestString("What would you like to do?\n'1' for commands.\n'2' to view Inventory.\n'quit' if you're scared.")
     if len(userCmd) > 0:
@@ -41,100 +34,366 @@ def main():
       #user entered nothing, ask again
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
-      house.changeRoom(userCmd, visual, sound)
+      house.changeRoom(userCmd, sound)
     elif userCmd == "2":
       visual.displayInventory()  
       
       
       
     # haven't reached this yet  
-    elif userCmd in spMoveCommands():
-      spMove(userCmd, roomIn, inventory)
-    elif userCmd in controlCommands():
-      otherCommand(userCmd, roomIn, inventory, allItems)
+    #elif userCmd in spMoveCommands():
+      #spMove(userCmd, roomIn, inventory)
+    #elif userCmd in controlCommands():
+      #otherCommand(userCmd, roomIn, inventory, allItems)
     elif userCmd == "quit":
-      GAMERUNNING = False
-      printNow("\nYou are a wuss.\n")
+      poorSoul.gameRunning = False
     else:
       printNow("I do not know that command.")
-  # end main() while loop
+  # end main() while loop ---------------------------------------
   visual.paintTile("group9")
-  time.sleep(6)    
+  time.sleep(3)    
   sound.stopMusic()
 # end main() -----------------------------------------------------------------------------------------------------------------------  
   
-# specific moves within specified room with current inventory of items on player
-def spMove(userCmd, roomIn, inventory):#-------------------------------------------------------------------------------------------------------
-  if userCmd == "jump":
-    jump(roomIn, inventory)
-  if userCmd == "fall":
-    fall(roomIn, inventory)
-  if userCmd == "dance":
-    dance(roomIn, inventory)
-  if userCmd == "sleep":
-    sleep(roomIn)
-  if userCmd == "run":
-    run()
-  if userCmd == "cry":
-    cry(roomIn)
-  if userCmd == "scream":
-    scream(roomIn)
-  if userCmd == "laugh":
-    laugh(roomIn)
-
-# other commands within specified room with current inventory of items on player
-def otherCommand(str, roomIn, inventory, allItems):#---------------------------------------------------------------------------------------------------
-  #define and perform the other actions
-  if str == "help":
-    printNow(welcomeMsg(roomIn))
-  elif str == "look":
-    printNow(roomDescription(roomIn))
-  elif str == "commands":
-    listCommands()
-  elif str == "inventory":
-    listInventory(inventory)
-  elif str == "examine":
-    examineItem(inventory, allItems)
-
 # valid moves: north, south, east, and west
 def movementCommands():#---------------------------------------------------------------------------------------------------
   validCommands = ['n', 's', 'e', 'w', 'u', 'd']
   return validCommands
 
-# specific valid moves
-def spMoveCommands():#---------------------------------------------------------------------------------------------------
-  validCommands = ['jump', 'dance', 'fall', 'sleep', 'run', 'cry', 'scream', 'laugh']
-  return validCommands
-
-# specific valid other commands
-def controlCommands():#---------------------------------------------------------------------------------------------------
-  validCommands = ['help', 'look', 'commands', 'examine', 'inventory']
-  return validCommands
-
-# lists inventory of items on player
-def listInventory(inventory):#---------------------------------------------------------------------------------------------------
-  if len(inventory) > 0:
-    for i in inventory:
-      printNow(i)
+# ====================================== general functions =================================================
+def setMediaPathToCurrentDir():
+  fullPathToFile = os.path.abspath(__file__)
+  filePath = os.path.dirname(fullPathToFile)
+  if fullPathToFile.startswith('/'):
+    setMediaPath(filePath + "/Assets/")
   else:
-    printNow("You have nothing on you.")
+    setMediaPath(filePath + '\\Assets\\')
     
-# add an item to inventory of items on player
-def addToInventory(item, inventory):#---------------------------------------------------------------------------------------------------
-  inventory.append(item)
+def getTextFile(fileName):
+  return open(getMediaPath() + fileName + ".txt", 'r')
 
-# check if an item is in the inventory of items
-def examineItem(inventory, allItems):#---------------------------------------------------------------------------------------------------
-  if len(inventory) > 0:
-    userCmd = requestString("What item do you want to examine?")
-    if userCmd in inventory:
-      printNow(allItems[userCmd])
+# ********************************************** visuals **************************************************
+class visuals:
+# Represents the current picture being displayed
+# attributes: canvas 
+  def __init__(self):
+    self.canvas = makeEmptyPicture(800,600)
+    
+  def welcome(self):
+    self.paintTile("title")
+    showInformation("Let's get weird!")  
+
+  def instructions(self):
+    self.paintTile("rules")
+    time.sleep(3)
+    self.paintLongText("starting information")
+     
+  def paintTile(self, tile):
+    newCanvas = makePicture(getMediaPath() + tile + ".jpg")
+    self.paintCanvas(newCanvas)
+  
+  def paintCanvas(self, picture):
+    copyInto(picture, self.canvas, 0, 0)
+    repaint(self.canvas)
+                          
+  def paintRoom(self, room):
+    roomToPaint = makePicture(room.picture)
+    self.paintCanvas(roomToPaint)
+    text = "This room is the " + room.picture[len(getMediaPath()):-4] # 4 characters for .jpg
+    # could have added room name to class, but thought this was a good use of substrings
+    text += room.getDoors()
+    self.whiteText(text)
+  
+  #######For inventory
+  def displayInventory(self):
+    inventory = ["king", "queen", "ace","paper","book"] ## for testing purposes, delete once connected to game inventory system
+   
+    if len(inventory) == 0: ## if inventory is empty, will handle case
+      showInformation("You do not have any items in your inventory")
+      ##TODO: should return user back to general action prompt
     else:
-      printNow("You do not have that item in inventory.")
-  else:
-    printNow("You do not have any items in inventory.")
+      invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
+      ##some what redudant with examineItem()
+      
+    if invInput == 'leave':
+       return True ##TODO: should return user back to general action prompt
+     
+    #for item in inventory: 
+    if invInput in inventory:
+      itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
+      posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
+      posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
+      text = "This should display " + invInput + "'s description from the dictionary (Use key's values in Dict)"
+      self.whiteText(text)
+      self.drawInventory(itemPic,posX,posY)
+    else:      
+      showInformation("You do not have that item.")
+         
+  def drawInventory(self,itemPic,width,height):
+    inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
+    #green was used items that need to not be square
+    repaint(self.canvas) 
 
+  #copys images of items onto screen, ignores specfied color.
+  def pyCopyIgnoreColor(self,source, target,targetX,targetY,colorToIgnore):
+    sWidth = getWidth(source)
+    sHeight = getHeight(source)
+    tWidth = getWidth(target)
+    tHeight = getHeight(target)
+  
+    for x in range(0, sWidth):
+      for y in range(0, sHeight):
+        oldPix = getPixel(source, x, y)
+        newX = x + targetX
+        newY = y + targetY
+        #this will allow me to have some of the photos leave the frame a little bit without crashing
+        if (newX < tWidth) and (newX >= 0) and (newY < tHeight) and (newY >= 0):
+          if getColor(oldPix) != colorToIgnore:
+            newPix = getPixel(target, newX, newY)
+            setColor(newPix, getColor(oldPix))
+    return target    
+        
+  ######## Text related functions
+  def paintLongText(self, fileName):
+    lines = getTextFile(fileName)
+    linesList = []
+    for line in lines:
+      linesList.append(line)
+    self.whiteText(linesList)
+    time.sleep(3)
+    showInformation("Good luck!")
+  
+  def textBox(self, x, y, xLen, yLen):
+    addRectFilled(self.canvas, x, y, xLen, yLen, black)
+  
+  def whiteText(self, text):
+    x = 50
+    xLen = 700
+    if isinstance(text, str):
+      y = 480
+      self.textBox(x, y, xLen, 100)  
+    else:
+      y = 50
+      self.textBox(x, y, xLen, 500)
+    typeIndent = 25
+    x += typeIndent
+    y += typeIndent
+    if not isinstance(text, list): # files already come in as lists
+      lines = text.split('\n')
+    else:
+      lines = self.fitTextBox(text, (xLen - (typeIndent * 2))) #indent on both sides
+    for line in lines:
+      addText(self.canvas, x, y, line, white)
+      y += 12 # line spacing
+      repaint(self.canvas)
+  
+  def fitTextBox(self, text, boxLength):
+    charPerLine = int(boxLength / 5.9)
+    smallLines = []
+    delimiter = " "
+    for line in text:    
+      while len(line) > charPerLine:
+        breakPoint = line.find(delimiter, charPerLine)
+        if breakPoint == -1:
+          break   
+        smallLines.append(line[0:breakPoint])
+        line = line[breakPoint + 1:len(line)]
+      smallLines.append(line)
+    return smallLines    
+      
+# --------------------------------------------- sounds --------------------------------------------------
+class gameSounds:
+  bGTimeStarted = 0
+  
+  def __init__(self, bGTrack = makeEmptySound(1)):
+    self.bGTrack = bGTrack
+    
+  #SOUND EFFECTS
+  def soundEffect(self, sound):
+    trackPath = getMediaPath() + sound + ".wav"
+    track = makeSound(trackPath)
+    play(track)
 
+  #BACKGROUND MUSIC FUNCTIONS
+  def startMusic(self):
+    trackPath = getMediaPath() + "main.wav"
+    self.bGTrack = makeSound(trackPath)
+    self.bGTimeStarted = time.time()
+    play(self.bGTrack)
+  
+  #checks the song duration and the last time that it was started
+  #then calls the startBgMusic() if is isn't playing any longer
+  #this can be called in lou of calling startBgMusic() completely, even for the first time
+  def continueMusic(self):
+    songDuration = getDuration(self.bGTrack)
+    now = time.time()
+    timePassed = now - self.bGTimeStarted
+    if timePassed > songDuration:
+      self.startMusic()
+      
+  def stopMusic(self):
+    stopPlaying(self.bGTrack)
+    
+# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Classes ++++++++++++++++++++++++++++++++++++++++++++++++++++
+class player:
+  # Represents the character in the game
+  # attributes: inventory, gameRunning
+  def __init__(self):
+    self.inventory = inventory()
+    self.gameRunning = true
+     
+class houseRooms:
+  # Represents the rooms in the house and the current room
+  # attributes: currentRoom, rooms
+  def __init__(self, startingRoom):
+    self.currentRoom = startingRoom
+    self.getRooms()
+  
+  def getRooms(self):
+  #             Map of home
+  #                  N
+  #                W + E
+  #                  S
+  #  Basement
+  #  |---------------|
+  #  |   Basement    |
+  #  |  up Library   |
+  #  |---------------|
+  #  1st Floor
+  #  |--------------------------------|
+  #  |               |                |
+  #  |    Kitchen    _   Dining Room  |
+  #  |               |                |
+  #  |------- |------|-------- |------|
+  #  |               |                | 
+  #  |    Library    _   Living Room  |
+  #  | down basement |up Billiard Room|
+  #  |----------------------|  |------|
+  #  2nd Floor
+  #  |--------------------------------|
+  #  |               |                |
+  #  |   Bathroom    _     Bedroom    |
+  #  |               |                |
+  #  |------- |------|-------- |------|
+  #  |               |                | 
+  #  |Master Bedroom _ Billiard Room  |
+  #  |               |down Living Room|
+  #  |--------------------------------|
+    self.rooms = dict()
+    # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
+    self.addRoom("basement", "", "", "", "", "library", "")
+    # 2nd floor rooms
+    self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "")
+    self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room")
+    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "")
+    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "")
+    # 1st floor rooms
+    self.addRoom("kitchen", "", "library", "", "dining room", "", "")
+    self.addRoom("dining room", "", "living room", "kitchen", "", "", "")
+    self.addRoom("library", "kitchen", "", "", "living room", "", "basement")
+    self.addRoom("living room", "dining room", "", "library", "", "billiard room", "")
+    #return rooms
+  
+  def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown):
+    self.rooms[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
+  
+  def changeRoom(self, direction, sound):
+    newRoom = self.tryDirection(direction)
+    if newRoom != self.currentRoom and newRoom != "":
+      self.currentRoom = newRoom
+  
+  def tryDirection(self, direction):
+    newRoom = ""
+    currentRoom = self.rooms[self.currentRoom]
+    if direction == 'n':
+      newRoom = currentRoom.north
+    elif direction == 's':
+      newRoom = currentRoom.south
+    elif direction == 'e':
+      newRoom = currentRoom.east
+    elif direction == 'w':
+      newRoom = currentRoom.west
+    elif direction == 'u':
+      newRoom = currentRoom.stairsUp
+    elif direction == 'd':
+      newRoom = currentRoom.stairsDown
+    return newRoom    
+
+class singleRoom:
+  # Represents a room
+  # attribute: picture, north, south, west, east, upDown
+  def __init__(self, picture, north, south, west, east, stairsUp, stairsDown):
+    self.picture = picture
+    self.north = north
+    self.south = south
+    self.west = west
+    self.east = east
+    self.stairsUp = stairsUp
+    self.stairsDown = stairsDown
+    
+  def __str__(self):
+    return self.picture
+    
+  def getDoors(self):
+    doorLocations = ""
+    if self.north != "":
+      doorLocations += "\nn: " + self.north
+    if self.south != "":
+      doorLocations += "\ns: " + self.south
+    if self.west != "":
+      doorLocations += "\nw: " + self.west
+    if self.east != "":
+      doorLocations += "\ne: " + self.east
+    if self.stairsUp != "":
+      doorLocations += "\nu: " + self.stairsUp
+    if self.stairsDown != "":
+      doorLocations += "\nd: " + self.stairsDown
+    return doorLocations
+    
+class inventory:
+  # Represents character items
+  # attributes: currentItems, possibleItems
+  def __init__(self):
+    self.currentItems = dict()
+    self.getItems() # gets all possible items from txt file
+  
+  def __str__(self):
+    itemsString = ""
+    for item in self.currentItems:
+      itemsString += item + "\n"
+    return itemsString  
+        
+  def getItems(self):
+    itemsFile = getTextFile("inventory items")
+    delimiter = "$"
+    self.possibleItems = dict()
+    for line in itemsFile:
+      itemAndDefinition = line.split(delimiter)
+      self.possibleItems[itemAndDefinition[0].strip()] = itemAndDefinition[1].strip()
+  
+  def addItem(self, item):
+    self.currentItems[item] = self.possibleItems.get(item)
+    
+#class actions:
+  # Represents character actions
+  
+# old code - remove at the end if not used %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # lists different types of commands or movements 
 def listCommands():
   print "Move: ", movementCommands()
@@ -249,325 +508,58 @@ def laugh(roomIn):
     printNow("Kinda weird that you're laughing right now...")
 
 
-  
-
-# ====================================== general functions =================================================
-def setMediaPathToCurrentDir():
-  fullPathToFile = os.path.abspath(__file__)
-  filePath = os.path.dirname(fullPathToFile)
-  if fullPathToFile.startswith('/'):
-    setMediaPath(filePath + "/Assets/")
+# lists inventory of items on player
+def listInventory(inventory):#---------------------------------------------------------------------------------------------------
+  if len(inventory) > 0:
+    for i in inventory:
+      printNow(i)
   else:
-    setMediaPath(filePath + '\\Assets\\')
-
-
-# ********************************************** visuals **************************************************
-class visuals:
-# Represents the current picture being displayed
-# attributes: canvas 
-  def __init__(self):
-    self.canvas = makeEmptyPicture(800,600)
+    printNow("You have nothing on you.")
     
-  def welcome(self):
-    self.paintTile("title")
-    notValid = true
-    while notValid:
-      userInput = requestString("Would you like to play? Y or N?")
-      userInput = userInput.lower()
-      if userInput != "y" and userInput != "n":
-        showInformation("You made an invalid entry.")
-      else:
-        notValid = false
-    if userInput == "y":
-        return true
+# add an item to inventory of items on player
+def addToInventory(item, inventory):#---------------------------------------------------------------------------------------------------
+  inventory.append(item)
+
+# check if an item is in the inventory of items
+def examineItem(inventory, allItems):#---------------------------------------------------------------------------------------------------
+  if len(inventory) > 0:
+    userCmd = requestString("What item do you want to examine?")
+    if userCmd in inventory:
+      printNow(allItems[userCmd])
     else:
-      return false
+      printNow("You do not have that item in inventory.")
+  else:
+    printNow("You do not have any items in inventory.")
 
-  def instructions(self):
-    self.paintTile("rules")
-    time.sleep(3)
-    self.paintLongText("starting information")
-    time.sleep(6)
-    notValid = true
-    while notValid:
-      userInput = requestString("Would you like to continue? Y or N?")
-      userInput = userInput.lower()
-      if userInput != "y" and userInput != "n":
-        showInformation("You made an invalid entry.")
-      else:
-        notValid = false
-    if userInput == "y":
-      return true
-    else:
-      return false
-      
-  def paintTile(self, tile):
-    newCanvas = makePicture(getMediaPath() + tile + ".jpg")
-    self.paintCanvas(newCanvas)
-  
-  def paintCanvas(self, picture):
-    copyInto(picture, self.canvas, 0, 0)
-    repaint(self.canvas)
-                          
-  def paintRoom(self, room):
-    roomToPaint = makePicture(room.picture)
-    self.paintCanvas(roomToPaint)
-    text = "This room is the " + room.picture[len(getMediaPath()):-4] # 4 characters for .jpg
-    # could have added room name to class, but thought this was a good use of substrings
-    text += room.getDoors()
-    self.whiteText(text)
-  
-  #######For inventory
-  def displayInventory(self):
-    inventory = ["king", "queen", "ace","paper","book"] ## for testing purposes, delete once connected to game inventory system
-   
-    if len(inventory) == 0: ## if inventory is empty, will handle case
-      showInformation("You do not have any items in your inventory")
-      ##TODO: should return user back to general action prompt
-    else:
-      invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
-      ##some what redudant with examineItem()
-      
-    if invInput == 'leave':
-       return True ##TODO: should return user back to general action prompt
-     
-    #for item in inventory: 
-    if invInput in inventory:
-      itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
-      posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
-      posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
-      text = "This should display " + invInput + "'s description from the dictionary (Use key's values in Dict)"
-      self.whiteText(text)
-      self.drawInventory(itemPic,posX,posY)
-    else:      
-      showInformation("You do not have that item.")
-         
-  def drawInventory(self,itemPic,width,height):
-    inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
-    #green was used items that need to not be square
-    repaint(self.canvas) 
+# specific moves within specified room with current inventory of items on player
+def spMove(userCmd, roomIn, inventory):#-------------------------------------------------------------------------------------------------------
+  if userCmd == "jump":
+    jump(roomIn, inventory)
+  if userCmd == "fall":
+    fall(roomIn, inventory)
+  if userCmd == "dance":
+    dance(roomIn, inventory)
+  if userCmd == "sleep":
+    sleep(roomIn)
+  if userCmd == "run":
+    run()
+  if userCmd == "cry":
+    cry(roomIn)
+  if userCmd == "scream":
+    scream(roomIn)
+  if userCmd == "laugh":
+    laugh(roomIn)
 
-  #copys images of items onto screen, ignores specfied color.
-  def pyCopyIgnoreColor(self,source, target,targetX,targetY,colorToIgnore):
-    sWidth = getWidth(source)
-    sHeight = getHeight(source)
-    tWidth = getWidth(target)
-    tHeight = getHeight(target)
-  
-    for x in range(0, sWidth):
-      for y in range(0, sHeight):
-        oldPix = getPixel(source, x, y)
-        newX = x + targetX
-        newY = y + targetY
-        #this will allow me to have some of the photos leave the frame a little bit without crashing
-        if (newX < tWidth) and (newX >= 0) and (newY < tHeight) and (newY >= 0):
-          if getColor(oldPix) != colorToIgnore:
-            newPix = getPixel(target, newX, newY)
-            setColor(newPix, getColor(oldPix))
-    return target    
-        
-  ######## Text related functions
-  def paintLongText(self, fileName):
-    lines = open(getMediaPath() + fileName + ".txt", 'r')
-    linesList = []
-    for line in lines:
-      linesList.append(line)
-    self.whiteText(linesList)
-  
-  def textBox(self, x, y, xLen, yLen):
-    addRectFilled(self.canvas, x, y, xLen, yLen, black)
-  
-  def whiteText(self, text):
-    x = 50
-    xLen = 700
-    if isinstance(text, str):
-      y = 480
-      self.textBox(x, y, xLen, 100)  
-    else:
-      y = 50
-      self.textBox(x, y, xLen, 500)
-    typeIndent = 25
-    x += typeIndent
-    y += typeIndent
-    if not isinstance(text, list): # files already come in as lists
-      lines = text.split('\n')
-    else:
-      lines = self.fitTextBox(text, (xLen - (typeIndent * 2))) #indent on both sides
-    for line in lines:
-      addText(self.canvas, x, y, line, white)
-      y += 12 # line spacing
-      repaint(self.canvas)
-  
-  def fitTextBox(self, text, boxLength):
-    charPerLine = int(boxLength / 5.9)
-    smallLines = []
-    delimiter = " "
-    for line in text:    
-      while len(line) > charPerLine:
-        breakPoint = line.find(delimiter, charPerLine)
-        if breakPoint == -1:
-          break   
-        smallLines.append(line[0:breakPoint])
-        line = line[breakPoint + 1:len(line)]
-      smallLines.append(line)
-    return smallLines    
-      
-# --------------------------------------------- sounds --------------------------------------------------
-class gameSounds:
-  bGTimeStarted = 0
-  
-  def __init__(self, bGTrack = makeEmptySound(1)):
-    self.bGTrack = bGTrack
-    
-  #SOUND EFFECTS
-  def soundEffect(self, sound):
-    trackPath = getMediaPath() + sound + ".wav"
-    track = makeSound(trackPath)
-    play(track)
-
-  #BACKGROUND MUSIC FUNCTIONS
-  def startMusic(self):
-    trackPath = getMediaPath() + "main.wav"
-    self.bGTrack = makeSound(trackPath)
-    self.bGTimeStarted = time.time()
-    play(self.bGTrack)
-  
-  #checks the song duration and the last time that it was started
-  #then calls the startBgMusic() if is isn't playing any longer
-  #this can be called in lou of calling startBgMusic() completely, even for the first time
-  def continueMusic(self):
-    songDuration = getDuration(self.bGTrack)
-    now = time.time()
-    timePassed = now - self.bGTimeStarted
-    if timePassed > songDuration:
-      self.startMusic()
-      
-  def stopMusic(self):
-    stopPlaying(self.bGTrack)
-    
-# +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ Classes ++++++++++++++++++++++++++++++++++++++++++++++++++++
-class player:
-  # Represents the character in the game
-  # attributes: name, inventoryDictionary
-  def __init__(self, name):
-    self.name = name
-    #self.inventoryDictionary = inventoryDictionary
-     
-class houseRooms:
-  # Represents the rooms in the house and the current room
-  # attributes: currentRoom, rooms
-  def __init__(self, startingRoom):
-    self.currentRoom = startingRoom
-    self.getRooms()
-  
-  def getRooms(self):
-  #             Map of home
-  #                  N
-  #                W + E
-  #                  S
-  #  Basement
-  #  |---------------|
-  #  |   Basement    |
-  #  |  up Library   |
-  #  |---------------|
-  #  1st Floor
-  #  |--------------------------------|
-  #  |               |                |
-  #  |    Kitchen    _   Dining Room  |
-  #  |               |                |
-  #  |------- |------|-------- |------|
-  #  |               |                | 
-  #  |    Library    _   Living Room  |
-  #  | down basement |up Billiard Room|
-  #  |----------------------|  |------|
-  #  2nd Floor
-  #  |--------------------------------|
-  #  |               |                |
-  #  |   Bathroom    _     Bedroom    |
-  #  |               |                |
-  #  |------- |------|-------- |------|
-  #  |               |                | 
-  #  |Master Bedroom _ Billiard Room  |
-  #  |               |down Living Room|
-  #  |--------------------------------|
-    self.rooms = dict()
-    # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
-    self.addRoom("basement", "", "", "", "", "library", "")
-    # 2nd floor rooms
-    self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "")
-    self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room")
-    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "")
-    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "")
-    # 1st floor rooms
-    self.addRoom("kitchen", "", "library", "", "dining room", "", "")
-    self.addRoom("dining room", "", "living room", "kitchen", "", "", "")
-    self.addRoom("library", "kitchen", "", "", "living room", "", "basement")
-    self.addRoom("living room", "dining room", "", "library", "", "billiard room", "")
-    #return rooms
-  
-  def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown):
-    self.rooms[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
-  
-  def changeRoom(self, direction, visual, sound):
-    newRoom = self.tryDirection(direction)
-    if newRoom != self.currentRoom and newRoom != "":
-      self.currentRoom = newRoom
-      visual.paintRoom(self.rooms[newRoom])
-  
-  def tryDirection(self, direction):
-    newRoom = ""
-    currentRoom = self.rooms[self.currentRoom]
-    if direction == 'n':
-      newRoom = currentRoom.north
-    elif direction == 's':
-      newRoom = currentRoom.south
-    elif direction == 'e':
-      newRoom = currentRoom.east
-    elif direction == 'w':
-      newRoom = currentRoom.west
-    elif direction == 'u':
-      newRoom = currentRoom.stairsUp
-    elif direction == 'd':
-      newRoom = currentRoom.stairsDown
-    return newRoom    
-
-class singleRoom:
-  # Represents a room
-  # attribute: picture, north, south, west, east, upDown
-  def __init__(self, picture, north, south, west, east, stairsUp, stairsDown):
-    self.picture = picture
-    self.north = north
-    self.south = south
-    self.west = west
-    self.east = east
-    self.stairsUp = stairsUp
-    self.stairsDown = stairsDown
-    
-  def __str__(self):
-    return self.picture
-    
-  def getDoors(self):
-    doorLocations = ""
-    if self.north != "":
-      doorLocations += "\nn: " + self.north
-    if self.south != "":
-      doorLocations += "\ns: " + self.south
-    if self.west != "":
-      doorLocations += "\nw: " + self.west
-    if self.east != "":
-      doorLocations += "\ne: " + self.east
-    if self.stairsUp != "":
-      doorLocations += "\nu: " + self.stairsUp
-    if self.stairsDown != "":
-      doorLocations += "\nd: " + self.stairsDown
-    return doorLocations
-    
-    
-class items:
-  # Represents character items
-  # attributes:
-  def __init__(self, item):
-    self.addItem(item) 
-  
-#class actions:
-  # Represents character actions
+# other commands within specified room with current inventory of items on player
+def otherCommand(str, roomIn, inventory, allItems):#---------------------------------------------------------------------------------------------------
+  #define and perform the other actions
+  if str == "help":
+    printNow(welcomeMsg(roomIn))
+  elif str == "look":
+    printNow(roomDescription(roomIn))
+  elif str == "commands":
+    listCommands()
+  elif str == "inventory":
+    listInventory(inventory)
+  elif str == "examine":
+    examineItem(inventory, allItems)
