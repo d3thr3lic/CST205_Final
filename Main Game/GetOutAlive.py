@@ -33,17 +33,13 @@ def main():
       #user entered nothing, ask again
       continue
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
-      house.changeRoom(userCmd, sound)
+      changedRoom = house.changeRoom(userCmd, sound)
+      if not changedRoom: # user input was not allowed
+        showInformation("There is no where to go in the direction")
+    elif userCmd == "1":
+      displayCommands()
     elif userCmd == "2":
       visual.displayInventory()  
-      
-      
-      
-    # haven't reached this yet  
-    #elif userCmd in spMoveCommands():
-      #spMove(userCmd, roomIn, inventory)
-    #elif userCmd in controlCommands():
-      #otherCommand(userCmd, roomIn, inventory, allItems)
     elif userCmd == "quit":
       poorSoul.gameRunning = False
     else:
@@ -58,6 +54,9 @@ def main():
 def movementCommands():#---------------------------------------------------------------------------------------------------
   validCommands = ['n', 's', 'e', 'w', 'u', 'd']
   return validCommands
+  
+def displayCommands():
+  showInformation("n = north\ns = south\ne = east\nw = west\nu = upstairs (if stairs are present)\nd = downstairs (if stairs are present)")
 
 # ====================================== general functions =================================================
 def setMediaPathToCurrentDir():
@@ -302,6 +301,8 @@ class houseRooms:
     newRoom = self.tryDirection(direction)
     if newRoom != self.currentRoom and newRoom != "":
       self.currentRoom = newRoom
+      return true
+    return false # in the same room
   
   def tryDirection(self, direction):
     newRoom = ""
