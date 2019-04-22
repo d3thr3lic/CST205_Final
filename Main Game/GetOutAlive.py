@@ -254,21 +254,6 @@ class houseRooms:
   #                  N
   #                W + E
   #                  S
-  #  Basement
-  #  |---------------|
-  #  |   Basement    |
-  #  |  up Library   |
-  #  |---------------|
-  #  1st Floor
-  #  |--------------------------------|
-  #  |               |                |
-  #  |    Kitchen    _   Dining Room  |
-  #  |               |                |
-  #  |------- |------|-------- |------|
-  #  |               |                | 
-  #  |    Library    _   Living Room  |
-  #  | down basement |up Billiard Room|
-  #  |----------------------|  |------|
   #  2nd Floor
   #  |--------------------------------|
   #  |               |                |
@@ -279,6 +264,22 @@ class houseRooms:
   #  |Master Bedroom _ Billiard Room  |
   #  |               |down Living Room|
   #  |--------------------------------|
+  #  1st Floor
+  #  |--------------------------------|
+  #  |               |                |
+  #  |    Kitchen    _   Dining Room  |
+  #  |               |                |
+  #  |------- |------|-------- |------|
+  #  |               |                | 
+  #  |    Library    _   Living Room  |
+  #  | down basement |up Billiard Room|
+  #  |----------------------|  |------|
+  #  Basement
+  #  |---------------|
+  #  |   Basement    |
+  #  |  up Library   |
+  #  |---------------|
+  
     self.rooms = dict()
     # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
     self.addRoom("basement", "", "", "", "", "library", "")
