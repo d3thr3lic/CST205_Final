@@ -21,7 +21,6 @@ def main():
   sound.startMusic()
   visual.welcome()
   visual.instructions()
-  #visual.paintRoom(house.rooms[startingRoom])
   poorSoul = player()
     
   while poorSoul.gameRunning:
@@ -370,8 +369,8 @@ class inventory:
     self.possibleItems = dict()
     for line in itemsFile:
       itemAndDefinition = line.split(delimiter)
-      #self.possibleItems[itemAndDefinition[0].strip()] = itemAndDefinition[1].strip()
-      #dict has issues with storing key:values
+      self.possibleItems[itemAndDefinition[0].strip()] = itemAndDefinition[1].strip()
+      
   def addItem(self, item):
     self.currentItems[item] = self.possibleItems.get(item)
     
