@@ -2,18 +2,18 @@
 
 def get_user_input1():
     return input('Choices: King, Queen, Ace, Joker\n'
-                    'What fuse do you want to insert into Breaker (1)? ("exit" to leave puzzle:)\n')
+                    'What keycard do you want to insert into Slot (1)? ("exit" to leave puzzle:)\n')
 
 def get_user_input2():
     return input('Choices: King, Queen, Ace\n'
-                    'What fuse do you want to insert into Breaker (2)? ("exit" to leave puzzle:)\n')
+                    'What keycard do you want to insert into Slot (2)? ("exit" to leave puzzle:)\n')
 
 def get_user_input3():
     return input('Choices: King, Ace,\n'
-                    'What fuse do you want to insert into Breaker (3)? ("exit" to leave puzzle:)\n')
+                    'What keycard do you want to insert into Slot (3)? ("exit" to leave puzzle:)\n')
 
 def get_user_input4():
-    return input('What fuse do you want to insert into Breaker (4)? (duh!)\n')
+    return input('What keycard do you want to insert into Slot (4)? (duh!)\n')
                     
 
 
@@ -21,7 +21,7 @@ def displayPuz1():
 
     output = "|****** Wall ********|                   |********* Wall **********|\n" + \
              "|--------------------|-------------------|-------------------------|\n" + \
-             "| [ unmarked fuse ]  |                   |         [ X ]   (3)     |\n" + \
+             "| [ unmarked card ]  |                   |         [ X ]   (3)     |\n" + \
              "|--------------------| direction facing  |-------------------------|\n" + \
              "|       [ X ]  (1)   |      <----->      |         [ X ]   (4)     |\n" + \
              "|--------------------|                   |-------------------------|\n" + \
@@ -34,7 +34,7 @@ def displayPuz2():
     
     output = "|****** Wall ********|                   |********* Wall **********|\n" + \
              "|--------------------|-------------------|-------------------------|\n" + \
-             "| [ unmarked fuse ]  |                   |         [ X ]   (3)     |\n" + \
+             "| [ unmarked card ]  |                   |         [ X ]   (3)     |\n" + \
              "|--------------------| direction facing  |-------------------------|\n" + \
              "|     [ JOKER ]      |      <----->      |         [ X ]   (4)     |\n" + \
              "|--------------------|                   |-------------------------|\n" + \
@@ -47,7 +47,7 @@ def displayPuz3():
     
     output = "|****** Wall ********|                   |********* Wall **********|\n" + \
              "|--------------------|-------------------|-------------------------|\n" + \
-             "| [ unmarked fuse ]  |                   |         [ X ]   (3)     |\n" + \
+             "| [ unmarked card ]  |                   |         [ X ]   (3)     |\n" + \
              "|--------------------| direction facing  |-------------------------|\n" + \
              "|     [ JOKER ]      |      <----->      |         [ X ]   (4)     |\n" + \
              "|--------------------|                   |-------------------------|\n" + \
@@ -60,7 +60,7 @@ def displayPuz4():
     
     output = "|****** Wall ********|                   |********* Wall **********|\n" + \
              "|--------------------|-------------------|-------------------------|\n" + \
-             "| [ unmarked fuse ]  |                   |    [ KING of SPADES]    |\n" + \
+             "| [ unmarked card ]  |                   |    [ KING of SPADES]    |\n" + \
              "|--------------------| direction facing  |-------------------------|\n" + \
              "|     [ JOKER ]      |      <----->      |         [ X ]   (4)     |\n" + \
              "|--------------------|                   |-------------------------|\n" + \
@@ -83,7 +83,7 @@ def main():
 
         if guess1.strip().lower() == puzzleKeys[3]:
                 
-            print("The " + str(puzzleKeys[3]) + " fuse snaps perfectly into the slot.")
+            print("The " + str(puzzleKeys[3]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
             print(displayPuz2())
             choice2 = get_user_input2()
             guess2 = str(choice2)
@@ -94,7 +94,7 @@ def main():
 
             if guess2.strip().lower() == puzzleKeys[1]:
 
-                print("The " + str(puzzleKeys[1]) + " fuse snaps perfectly into the slot.")
+                print("The " + str(puzzleKeys[1]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
                 print(displayPuz3())
                 choice3 = get_user_input3()
                 guess3 = str(choice3)
@@ -104,7 +104,7 @@ def main():
                     break
 
                 if guess3.strip().lower() == puzzleKeys[0]:
-                    print("The " + str(puzzleKeys[0]) + " fuse snaps perfectly into the slot.")
+                    print("The " + str(puzzleKeys[0]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
                     print(displayPuz4())
                     choice4 = get_user_input4()
                     guess4 = str(choice4)
@@ -120,17 +120,17 @@ def main():
                     
 
                 elif guess3.strip().lower() == puzzleKeys[2]:
-                    print("That's not the right fuse for this breaker.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
+                    print("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
                     continue
 
                 
                 
             elif guess2.strip().lower() == puzzleKeys[0] or guess2.strip().lower() == puzzleKeys[2]:
-                print("That's not the right fuse for this breaker.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
+                print("TThe keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
                 continue
 
         elif guess1.strip().lower() == puzzleKeys[0] or guess1.strip().lower() == puzzleKeys[1] or guess1.strip().lower() == puzzleKeys[2]:
-            print("That's not the right fuse for this breaker.  There's no point in trying the other panels if you can't get this one right.  You'll have to start over.")
+            print("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right.  You'll have to start over.")
             continue
 
         else:
