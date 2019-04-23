@@ -117,7 +117,7 @@ class visuals:
       showInformation("You do not have any items in your inventory")
       invInput = 'leave'
     else:
-      invInput = requestString("Which item do you want to see?\n" + str(inventoryList)+"\nType leave to leave menu")
+      invInput = requestString("Which item do you want to see?\n" + str(inventoryList)+"\nType 'leave' to leave menu")
       #TODO:(maybe) account for Caps and spaces
     if invInput == 'leave':
        return True ##should return user back to general action prompt
