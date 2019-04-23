@@ -436,22 +436,25 @@ class puzzle():
     
   def runPuzzle(self, player, visual, sound):
     visual.paintLongText("puzzle intro")
+    sound.continueMusic()
     time.sleep(3)
     showInformation("Don't Cry...")
     visual.paintLongText("puzzle hint")
+    sound.continueMusic()
     time.sleep(3)
     showInformation("Don't Screw It Up!")
     while True:
         visual.paintLongText("displayPuz1")
         sound.continueMusic()
         guess1 = str(self.get_user_input1())
-        sound.continueMusic() #in case user took a long time to choose, call sound.continueMusic() again
+        sound.continueMusic()
         if guess1 == 'exit':
             showInformation("Come back when you're ready.")
             break
 
         if guess1.strip().lower() == self.puzzleKeys[3]:              
             sound.soundEffect("good beep")
+            sound.continueMusic()
             showInformation("The " + str(self.puzzleKeys[3]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
             visual.paintLongText("displayPuz2")
             guess2 = str(self.get_user_input2())
@@ -487,7 +490,7 @@ class puzzle():
                     
                     sound.soundEffect("bad beep")
                     showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
-                    if self.count < 3 and self.count > 0:
+                    if self.count < 3 and self.count >= 0:
                       sound.soundEffect("fail" + str(self.count))
                     showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
                     count += 1
@@ -505,7 +508,7 @@ class puzzle():
                 
                 sound.soundEffect("bad beep")
                 showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
-                if self.count < 3 and self.count > 0:
+                if self.count < 3 and self.count >= 0:
                   sound.soundEffect("fail" + str(self.count))
                 showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
                 self.count += 1
@@ -513,13 +516,19 @@ class puzzle():
 
         elif guess1.strip().lower() == self.puzzleKeys[0] or guess1.strip().lower() == self.puzzleKeys[1] or guess1.strip().lower() == self.puzzleKeys[2]:
             if self.count >= 3:
+                sound.soundEffect("bad beep")
+                sound.soundEffect("heavy footsteps approaching")
                 showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
                 showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
+                sound.soundEffect("bad end")
                 showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
                 showInformation("So, you lose, obviously.")
                 return false
 
+            sound.soundEffect("bad beep")
             showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right.  You'll have to start over.")
+            if self.count < 3 and self.count >= 0:
+              sound.soundEffect("fail" + str(self.count))
             showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
             self.count += 1
             continue
