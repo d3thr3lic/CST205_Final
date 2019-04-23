@@ -22,7 +22,7 @@ def main():
   visual.welcome()
   visual.instructions()
   poorSoul = player()
-    
+  
   while poorSoul.gameRunning:
     visual.paintRoom(house.rooms[house.currentRoom])
     sound.continueMusic()
@@ -38,8 +38,20 @@ def main():
       if not changedRoom: # user input was not allowed
         showInformation("There is no where to go in the direction")
         continue
-      visual.paintRoom(house.rooms[house.currentRoom])
-      house.getRoomItem(poorSoul, visual)
+      else:
+        visual.paintRoom(house.rooms[house.currentRoom])
+        house.getRoomItem(poorSoul, visual)
+      if len(poorSoul.inventory.possibleItems) == len(poorSoul.inventory.currentItems) and house.currentRoom == "library":
+        house.currentRoom = "basement"
+        time.sleep(2)
+        visual.paintRoom(house.rooms[house.currentRoom])
+        finalPuzzle = puzzle()
+        winner = finalPuzzle.runPuzzle(poorSoul, visual, sound)
+        if winner:
+          visual.winner()
+        else:
+          visual.loser()
+        break
     elif userCmd == "1":
       displayCommands()
     elif userCmd == "2":
@@ -90,6 +102,16 @@ class visuals:
     self.paintTile("rules")
     time.sleep(3)
     self.paintLongText("starting information")
+    time.sleep(3)
+    showInformation("Good luck!")
+    
+  def winner(self):
+    self.paintTile("winner")
+    showInformation("Yay me!")
+    
+  def loser(self):
+    self.paintTile("loser")
+    showInformation("I Suck...")
      
   def paintTile(self, tile):
     newCanvas = makePicture(getMediaPath() + tile + ".jpg")
@@ -173,8 +195,6 @@ class visuals:
     for line in lines:
       linesList.append(line)
     self.whiteText(linesList)
-    time.sleep(3)
-    showInformation("Good luck!")
   
   def textBox(self, x, y, xLen, yLen):
     addRectFilled(self.canvas, x, y, xLen, yLen, black)
@@ -295,7 +315,7 @@ class houseRooms:
   
     self.rooms = dict()
     # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, itemInRoom)
-    self.addRoom("basement", "", "", "", "", "library")
+    self.addRoom("basement", "", "", "", "", "")
     # 2nd floor rooms
     self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", "Ledger")
     self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", "Joker")
@@ -304,7 +324,7 @@ class houseRooms:
     # 1st floor rooms
     self.addRoom("kitchen", "", "library", "", "dining room", "", "", "Queen of Spades")
     self.addRoom("dining room", "", "living room", "kitchen", "", "", "", "Mysterious Note")
-    self.addRoom("library", "kitchen", "", "", "living room", "", "basement", "King of Spades")
+    self.addRoom("library", "kitchen", "", "", "living room", "", "", "King of Spades")
     self.addRoom("living room", "dining room", "", "library", "", "billiard room","", "")
     #return rooms
   
@@ -405,3 +425,98 @@ class inventory:
       
   def addItem(self, item):
     self.currentItems[item] = self.possibleItems.get(item)
+    
+# $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ ENDING PUZZLE $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+class puzzle():
+# Represents:
+# atributes:
+  def __init__(self):
+    self.puzzleKeys = ['king', 'queen', 'ace', 'joker']
+    self.count = 0
+    
+  def runPuzzle(self, player, visual, sound):
+    visual.paintLongText("puzzle intro")
+    time.sleep(3)
+    showInformation("Don't Cry...")
+    visual.paintLongText("puzzle hint")
+    time.sleep(3)
+    showInformation("Don't Screw It Up!")
+    while True:
+        visual.paintLongText("displayPuz1")
+        guess1 = str(self.get_user_input1())
+        if guess1 == 'exit':
+            showInformation("Come back when you're ready.")
+            break
+
+        if guess1.strip().lower() == self.puzzleKeys[3]:              
+            showInformation("The " + str(self.puzzleKeys[3]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
+            visual.paintLongText("displayPuz2")
+            guess2 = str(self.get_user_input2())
+            if guess2.strip().lower() == self.puzzleKeys[1]:
+                showInformation("The " + str(self.puzzleKeys[1]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
+                visual.paintLongText("displayPuz3")
+                guess3 = str(self.get_user_input3())
+                if guess3.strip().lower() == self.puzzleKeys[0]:
+                    showInformation("The " + str(self.puzzleKeys[0]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
+                    visual.paintLongText("displayPuz4")
+                    guess4 = str(self.get_user_input4())                    
+                    if guess4.strip().lower() == self.puzzleKeys[2]:
+                        showInformation("The " + str(self.puzzleKeys[2]) + " keycard slides nicely into slot, and at once all six panels start flashing green in unison.")
+                        showInformation("Suddently, you see and hear the six thick steel rods that were previously\n"
+                                "blocking the giant door quickly slide and recede from the granite foundation,\n"
+                                "disappearing into the solid wall, as the latch unlocks and the door slowly creaks open.\n")
+                        showInformation("You quickly book it through the tunnel beyond the door and somehow make it back up to the surface, down the street, unscathed.")
+                        showInformation("Yay! You're finally free from this nightmare(and game), you learn your lesson to not take what's not yours(not really), and you win!!")
+                        return true                  
+                elif guess3.strip().lower() == self.puzzleKeys[2]:
+                    if self.count >= 3:
+                        showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
+                        showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
+                        showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
+                        showInformation("So, you lose, obviously.")
+                        return false
+                    showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
+                    showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
+                    count += 1
+                    continue             
+            elif guess2.strip().lower() == self.puzzleKeys[0] or guess2.strip().lower() == self.puzzleKeys[2]:
+                if self.count >= 3:
+                    showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
+                    showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
+                    showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
+                    showInformation("So, you lose, obviously.")
+                    return false
+
+                showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
+                showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
+                self.count += 1
+                continue
+
+        elif guess1.strip().lower() == self.puzzleKeys[0] or guess1.strip().lower() == self.puzzleKeys[1] or guess1.strip().lower() == self.puzzleKeys[2]:
+            if self.count >= 3:
+                showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
+                showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
+                showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
+                showInformation("So, you lose, obviously.")
+                return false
+
+            showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right.  You'll have to start over.")
+            showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
+            self.count += 1
+            continue
+
+        else:
+            showInformation('You didnt enter a valid number. Try again!')
+
+
+  def get_user_input1(self):
+    return requestString('Choices: King, Queen, Ace, Joker\nWhat keycard do you want to insert into Slot (1)? ("exit" to leave puzzle:)\n')
+
+  def get_user_input2(self):
+    return requestString('Choices: King, Queen, Ace\nWhat keycard do you want to insert into Slot (2)?\n')
+
+  def get_user_input3(self):
+    return requestString('Choices: King, Ace,\nWhat keycard do you want to insert into Slot (3)?\n')
+
+  def get_user_input4(self):
+    return requestString('What keycard do you want to insert into Slot (4)? (duh!)\n')
