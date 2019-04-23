@@ -139,7 +139,7 @@ class visuals:
     inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
     #green was used items that need to not be square
     repaint(self.canvas)
-    time.sleep(3)  
+    time.sleep(1)  
 
   #copys images of items onto screen, ignores specfied color.
   def pyCopyIgnoreColor(self,source, target,targetX,targetY,colorToIgnore):
@@ -293,13 +293,13 @@ class houseRooms:
     # 2nd floor rooms
     self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", "Ledger")
     self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", "Joker")
-    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "Ace of Spades")
-    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", "Mysterious Note")
+    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "","", "Ace of Spades")
+    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", "Crumpled Note")
     # 1st floor rooms
     self.addRoom("kitchen", "", "library", "", "dining room", "", "", "Queen of Spades")
-    self.addRoom("dining room", "", "living room", "kitchen", "", "", "", "Crumpled Note")
+    self.addRoom("dining room", "", "living room", "kitchen", "", "", "", "Mysterious Note")
     self.addRoom("library", "kitchen", "", "", "living room", "", "basement", "King of Spades")
-    self.addRoom("living room", "dining room", "", "library", "", "billiard room", "")
+    self.addRoom("living room", "dining room", "", "library", "", "billiard room","", "")
     #return rooms
   
   def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp = "", stairsDown = "", itemInRoom = ""):
@@ -584,4 +584,4 @@ def otherCommand(str, roomIn, inventory, allItems):#----------------------------
   elif str == "inventory":
     listInventory(inventory)
   elif str == "examine":
-    examineItem(inventory, allItems)
+    examineItem(inventory, allItems)                                                                                                                                                              
