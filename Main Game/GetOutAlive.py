@@ -27,6 +27,7 @@ def main():
     visual.paintRoom(house.rooms[house.currentRoom])
     sound.continueMusic()
     userCmd = requestString("What would you like to do?\n'1' for commands.\n'2' to view Inventory.\n'quit' if you're scared.")
+    sound.continueMusic() #the user may take a long time to choose what to do, so when they press okay it will resume music
     if len(userCmd) > 0:
       userCmd = userCmd.lower()
     else:
@@ -44,13 +45,14 @@ def main():
     elif userCmd == "2":
       visual.displayInventory(poorSoul)  
     elif userCmd == "quit":
-      poorSoul.gameRunning = False
+      poorSoul.gameRunning = False    
     else:
       showInformation("That is not a valid command.")
   # end main() while loop ---------------------------------------
   visual.paintTile("group9")
-  time.sleep(3)    
+  sound.soundEffect("main fade")
   sound.stopMusic()
+  time.sleep(3)
 # end main() -----------------------------------------------------------------------------------------------------------------------  
   
 # valid moves: north, south, east, and west
@@ -313,6 +315,10 @@ class houseRooms:
     newRoom = self.tryDirection(direction)
     if newRoom != self.currentRoom and newRoom != "":
       self.currentRoom = newRoom
+      if direction == "u" or direction == "d":
+        sound.soundEffect("stairs")
+      else:
+        sound.soundEffect("open door")
       return true
     return false # in the same room
   
