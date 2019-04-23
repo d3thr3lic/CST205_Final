@@ -55,6 +55,7 @@ def main():
     elif userCmd == "1":
       displayCommands()
     elif userCmd == "2":
+      sound.soundEffect("inventory")
       visual.displayInventory(poorSoul)  
     elif userCmd == "quit":
       poorSoul.gameRunning = False    
@@ -467,22 +468,29 @@ class puzzle():
       if guess1.strip().lower() == self.puzzleKeys[3]:              
         self.correctPick(3, sound, visual) 
         visual.showPuzzlePic("displayPuz2")
+        sound.continueMusic()
         guess2 = str(self.get_user_input2())
         if guess2.strip().lower() == self.puzzleKeys[1]:
           self.correctPick(1, sound, visual)                     
           visual.showPuzzlePic("displayPuz3")
+          sound.continueMusic()
           guess3 = str(self.get_user_input3())
+          sound.continueMusic()
           if guess3.strip().lower() == self.puzzleKeys[0]:
             self.correctPick(0, sound, visual) 
             visual.showPuzzlePic("displayPuz4")
+            sound.continueMusic()
             guess4 = str(self.get_user_input4())                    
+            sound.continueMusic()
             if guess4.strip().lower() == self.puzzleKeys[2]:
               self.correctPick(2, sound, visual)
+              sound.continueMusic()
               sound.soundEffect("open final door")
               showInformation("Suddently, you see and hear the six thick steel rods that were previously\n"
                               "blocking the giant door quickly slide and recede from the granite foundation,\n"
                               "disappearing into the solid wall, as the latch unlocks and the door slowly creaks open.\n")
               showInformation("You quickly book it through the tunnel beyond the door and somehow make it back up to the surface, down the street, unscathed.")
+              sound.continueMusic()
               showInformation("Yay! You're finally free from this nightmare(and game), you learn your lesson to not take what's not yours(not really), and you win!!")
               return true
             elif guess4.strip().lower() in self.puzzleKeys:
@@ -503,7 +511,7 @@ class puzzle():
             showInformation('You didnt enter a valid card. Try again!')            
         elif guess2.strip().lower() in self.puzzleKeys:
           if self.count >= 3:
-            self.loser()
+            self.loser(sound, visual)
             return false
           self.incorrectPick(sound, visual)       
           continue
@@ -511,7 +519,7 @@ class puzzle():
           showInformation('You didnt enter a valid card. Try again!')
       elif guess1.strip().lower() in self.puzzleKeys:
         if self.count >= 3:           
-          self.loser()
+          self.loser(sound, visual)
           return false
         self.incorrectPick(sound, visual)
         continue
@@ -519,6 +527,7 @@ class puzzle():
         showInformation('You didnt enter a valid card. Try again!')
 
   def loser(self, sound, visual):
+    sound.continueMusic()
     sound.soundEffect("bad beep")
     sound.soundEffect("heavy footsteps approaching")
     showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
@@ -528,6 +537,7 @@ class puzzle():
     showInformation("So, you lose, obviously.")
     
   def incorrectPick(self, sound, visual):
+    sound.continueMusic()
     sound.soundEffect("bad beep")
     showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
     if self.count < 3 and self.count >= 0:
@@ -536,6 +546,7 @@ class puzzle():
     self.count += 1
     
   def correctPick(self, keycard, sound, visual):
+    sound.continueMusic()
     sound.soundEffect("good beep")
     showInformation("The " + str(self.puzzleKeys[keycard]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
 
