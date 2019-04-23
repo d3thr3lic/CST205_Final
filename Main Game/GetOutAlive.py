@@ -36,14 +36,17 @@ def main():
       changedRoom = house.changeRoom(userCmd, sound)
       if not changedRoom: # user input was not allowed
         showInformation("There is no where to go in the direction")
+        continue
+      visual.paintRoom(house.rooms[house.currentRoom])
+      house.getRoomItem(poorSoul, visual)
     elif userCmd == "1":
       displayCommands()
     elif userCmd == "2":
-      visual.displayInventory() 
+      visual.displayInventory()  
     elif userCmd == "quit":
       poorSoul.gameRunning = False
     else:
-      printNow("I do not know that command.")
+      showInformation("That is not a valid command.")
   # end main() while loop ---------------------------------------
   visual.paintTile("group9")
   time.sleep(3)    
@@ -124,18 +127,16 @@ class visuals:
       self.whiteText(text)
       self.drawInventory(itemPic,posX,posY)
     else:      
-      showInformation("You do not have that item.")
-  
-  def showInventory(self,invInput):
-    itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
+      showInformation("You do not have that item.")    
+   
+  def showInventory(self, itemPic, definition):
     posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
     posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
-    text = "This should display " + invInput + "'s description from the dictionary (Use key's values in Dict)"
-    self.whiteText(text)
-    self.drawInventory(itemPic,posX,posY)
-                     
+    self.whiteText(definition)
+    self.drawInventory(itemPic,posX,posY)   
+         
   def drawInventory(self,itemPic,width,height):
-    inventory.currentItems = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
+    inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
     #green was used items that need to not be square
     repaint(self.canvas)
     time.sleep(3)  
@@ -287,22 +288,22 @@ class houseRooms:
   #  |---------------|
   
     self.rooms = dict()
-    # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, roomsDictionary)
-    self.addRoom("basement", "", "", "", "", "library", "")
+    # addRoom(roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, itemInRoom)
+    self.addRoom("basement", "", "", "", "", "library")
     # 2nd floor rooms
-    self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "")
-    self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room")
-    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "")
-    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "")
+    self.addRoom("bedroom", "", "billiard room", "bathroom", "", "", "", "Ledger")
+    self.addRoom("billiard room", "bedroom", "", "master bedroom", "", "", "living room", "Joker")
+    self.addRoom("master bedroom", "bathroom", "", "", "billiard room", "", "Ace of Spades")
+    self.addRoom("bathroom", "", "master bedroom", "", "bedroom", "", "", "Mysterious Note")
     # 1st floor rooms
-    self.addRoom("kitchen", "", "library", "", "dining room", "", "")
-    self.addRoom("dining room", "", "living room", "kitchen", "", "", "")
-    self.addRoom("library", "kitchen", "", "", "living room", "", "basement")
+    self.addRoom("kitchen", "", "library", "", "dining room", "", "", "Queen of Spades")
+    self.addRoom("dining room", "", "living room", "kitchen", "", "", "", "Crumpled Note")
+    self.addRoom("library", "kitchen", "", "", "living room", "", "basement", "King of Spades")
     self.addRoom("living room", "dining room", "", "library", "", "billiard room", "")
     #return rooms
   
-  def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown):
-    self.rooms[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown)
+  def addRoom(self, roomName, roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp = "", stairsDown = "", itemInRoom = ""):
+    self.rooms[roomName] = singleRoom(getMediaPath() + roomName +".jpg", roomToNorth, roomToSouth, roomToWest, RoomToEast, stairsUp, stairsDown, itemInRoom)
   
   def changeRoom(self, direction, sound):
     newRoom = self.tryDirection(direction)
@@ -326,12 +327,23 @@ class houseRooms:
       newRoom = currentRoom.stairsUp
     elif direction == 'd':
       newRoom = currentRoom.stairsDown
-    return newRoom    
-
+    return newRoom
+    
+  def getRoomItem(self, player, visual):
+    roomItem = self.rooms[self.currentRoom].itemInRoom
+    if roomItem == "":
+      return # no items in this room
+    for item in player.inventory.currentItems:
+      if roomItem == item:
+        return # player already has item
+    player.inventory.addItem(roomItem)
+    visual.showInventory(makePicture(getMediaPath() + roomItem + ".jpg"), player.inventory.currentItems[roomItem])
+    showInformation("Good job!")
+    
 class singleRoom:
   # Represents a room
   # attribute: picture, north, south, west, east, upDown
-  def __init__(self, picture, north, south, west, east, stairsUp, stairsDown):
+  def __init__(self, picture, north, south, west, east, stairsUp = "", stairsDown = "", itemInRoom = ""):
     self.picture = picture
     self.north = north
     self.south = south
@@ -339,6 +351,7 @@ class singleRoom:
     self.east = east
     self.stairsUp = stairsUp
     self.stairsDown = stairsDown
+    self.itemInRoom = itemInRoom
     
   def __str__(self):
     return self.picture
@@ -382,8 +395,6 @@ class inventory:
       
   def addItem(self, item):
     self.currentItems[item] = self.possibleItems.get(item)
-    print self.currentItems(item)
-    
     
 #class actions:
   # Represents character actions
@@ -573,4 +584,4 @@ def otherCommand(str, roomIn, inventory, allItems):#----------------------------
   elif str == "inventory":
     listInventory(inventory)
   elif str == "examine":
-    examineItem(inventory, allItems)                                                                                                                                                                      
+    examineItem(inventory, allItems)
