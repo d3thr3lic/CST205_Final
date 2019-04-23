@@ -85,7 +85,7 @@ def setMediaPathToCurrentDir():
     setMediaPath(filePath + '\\Assets\\')
     
 def getTextFile(fileName):
-  return open(getMediaPath() + fileName + ".doc", 'r')
+  return open(getMediaPath() + fileName + ".txt", 'r')
 
 # ********************************************** visuals **************************************************
 class visuals:
@@ -129,7 +129,7 @@ class visuals:
     text += room.getDoors()
     self.whiteText(text)
   
-  #######For inventory
+ #######For inventory
   def displayInventory(self,player):
     #inventory = ["king", "queen", "ace","paper","book","joker"] ## for testing purposes
     inventoryList = []
@@ -149,8 +149,8 @@ class visuals:
     #for item in inventory: 
     if invInput in inventoryList:
       itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
-      posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
-      posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
+      posX = self.getStartX(itemPic)
+      posY = self.getStartY(itemPic)
       self.whiteText(player.inventory.currentItems[invInput])
       self.drawInventory(itemPic,posX,posY)
       showInformation("Continue?")
@@ -158,11 +158,23 @@ class visuals:
       showInformation("You do not have that item.")    
    
   def showInventory(self, itemPic, definition):
-    posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
-    posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
+    posX = self.getStartX(itemPic)
+    posY = self.getStartY(itemPic)
     self.whiteText(definition)
-    self.drawInventory(itemPic,posX,posY)   
-         
+    self.drawInventory(itemPic,posX,posY)
+    
+  def showPuzzlePic(self, pic):
+    puzzlePic = makePicture(getMediaPath() + pic + ".jpg")
+    posX = self.getStartX(puzzlePic)
+    posY = self.getStartY(puzzlePic)
+    self.drawInventory(puzzlePic,posX,posY)
+  
+  def getStartX(self, pic):
+    return getWidth(self.canvas) / 2 - getWidth(pic) / 2
+    
+  def getStartY(self, pic):
+    return getHeight(self.canvas) / 2 - getHeight(pic) / 2
+    
   def drawInventory(self,itemPic,width,height):
     inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
     #green was used items that need to not be square
@@ -443,99 +455,89 @@ class puzzle():
     sound.continueMusic()
     time.sleep(3)
     showInformation("Don't Screw It Up!")
+    visual.paintCanvas(makePicture(getMediaPath() + "basement.jpg"))
     while True:
-        visual.paintLongText("displayPuz1")
-        sound.continueMusic()
-        guess1 = str(self.get_user_input1())
-        sound.continueMusic()
-        if guess1 == 'exit':
-            showInformation("Come back when you're ready.")
-            break
-
-        if guess1.strip().lower() == self.puzzleKeys[3]:              
-            sound.soundEffect("good beep")
-            sound.continueMusic()
-            showInformation("The " + str(self.puzzleKeys[3]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
-            visual.paintLongText("displayPuz2")
-            guess2 = str(self.get_user_input2())
-            if guess2.strip().lower() == self.puzzleKeys[1]:
-                sound.soundEffect("good beep")
-                showInformation("The " + str(self.puzzleKeys[1]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
-                visual.paintLongText("displayPuz3")
-                guess3 = str(self.get_user_input3())
-                if guess3.strip().lower() == self.puzzleKeys[0]:
-                    sound.soundEffect("good beep")
-                    showInformation("The " + str(self.puzzleKeys[0]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
-                    visual.paintLongText("displayPuz4")
-                    guess4 = str(self.get_user_input4())                    
-                    if guess4.strip().lower() == self.puzzleKeys[2]:
-                        sound.soundEffect("good beep")
-                        showInformation("The " + str(self.puzzleKeys[2]) + " keycard slides nicely into slot, and at once all six panels start flashing green in unison.")
-                        sound.soundEffect("open final door")
-                        showInformation("Suddently, you see and hear the six thick steel rods that were previously\n"
-                                "blocking the giant door quickly slide and recede from the granite foundation,\n"
-                                "disappearing into the solid wall, as the latch unlocks and the door slowly creaks open.\n")
-                        showInformation("You quickly book it through the tunnel beyond the door and somehow make it back up to the surface, down the street, unscathed.")
-                        showInformation("Yay! You're finally free from this nightmare(and game), you learn your lesson to not take what's not yours(not really), and you win!!")
-                        return true                  
-                elif guess3.strip().lower() == self.puzzleKeys[2]:
-                    if self.count >= 3:
-                        sound.soundEffect("bad beep")
-                        showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
-                        showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
-                        sound.soundEffect("bad end")
-                        showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
-                        showInformation("So, you lose, obviously.")
-                        return false
-                    
-                    sound.soundEffect("bad beep")
-                    showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
-                    if self.count < 3 and self.count >= 0:
-                      sound.soundEffect("fail" + str(self.count))
-                    showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
-                    count += 1
-                    continue             
-            elif guess2.strip().lower() == self.puzzleKeys[0] or guess2.strip().lower() == self.puzzleKeys[2]:
-                if self.count >= 3:
-                    sound.soundEffect("bad beep")
-                    sound.soundEffect("heavy footsteps approaching")
-                    showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
-                    showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
-                    sound.soundEffect("bad end")
-                    showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
-                    showInformation("So, you lose, obviously.")
-                    return false
-                
-                sound.soundEffect("bad beep")
-                showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
-                if self.count < 3 and self.count >= 0:
-                  sound.soundEffect("fail" + str(self.count))
-                showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
-                self.count += 1
-                continue
-
-        elif guess1.strip().lower() == self.puzzleKeys[0] or guess1.strip().lower() == self.puzzleKeys[1] or guess1.strip().lower() == self.puzzleKeys[2]:
+      visual.showPuzzlePic("displayPuz1")
+      sound.continueMusic()
+      guess1 = str(self.get_user_input1())
+      sound.continueMusic()
+      if guess1 == 'exit':
+        showInformation("Come back when you're ready.")
+        break
+      if guess1.strip().lower() == self.puzzleKeys[3]:              
+        self.correctPick(3, sound, visual) 
+        visual.showPuzzlePic("displayPuz2")
+        guess2 = str(self.get_user_input2())
+        if guess2.strip().lower() == self.puzzleKeys[1]:
+          self.correctPick(1, sound, visual)                     
+          visual.showPuzzlePic("displayPuz3")
+          guess3 = str(self.get_user_input3())
+          if guess3.strip().lower() == self.puzzleKeys[0]:
+            self.correctPick(0, sound, visual) 
+            visual.showPuzzlePic("displayPuz4")
+            guess4 = str(self.get_user_input4())                    
+            if guess4.strip().lower() == self.puzzleKeys[2]:
+              self.correctPick(2, sound, visual)
+              sound.soundEffect("open final door")
+              showInformation("Suddently, you see and hear the six thick steel rods that were previously\n"
+                              "blocking the giant door quickly slide and recede from the granite foundation,\n"
+                              "disappearing into the solid wall, as the latch unlocks and the door slowly creaks open.\n")
+              showInformation("You quickly book it through the tunnel beyond the door and somehow make it back up to the surface, down the street, unscathed.")
+              showInformation("Yay! You're finally free from this nightmare(and game), you learn your lesson to not take what's not yours(not really), and you win!!")
+              return true
+            elif guess4.strip().lower() in self.puzzleKeys:
+              if self.count >= 3:
+                self.loser(sound, visual)
+                return false            
+              self.incorrectPick(sound, visual)
+              continue
+            else:
+              showInformation('You didnt enter a valid card. Try again!')                  
+          elif guess3.strip().lower() in self.puzzleKeys:
             if self.count >= 3:
-                sound.soundEffect("bad beep")
-                sound.soundEffect("heavy footsteps approaching")
-                showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
-                showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
-                sound.soundEffect("bad end")
-                showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
-                showInformation("So, you lose, obviously.")
-                return false
-
-            sound.soundEffect("bad beep")
-            showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right.  You'll have to start over.")
-            if self.count < 3 and self.count >= 0:
-              sound.soundEffect("fail" + str(self.count))
-            showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
-            self.count += 1
+              self.loser(sound, visual)
+              return false            
+            self.incorrectPick(sound, visual)
             continue
-
+          else:
+            showInformation('You didnt enter a valid card. Try again!')            
+        elif guess2.strip().lower() in self.puzzleKeys:
+          if self.count >= 3:
+            self.loser()
+            return false
+          self.incorrectPick(sound, visual)       
+          continue
         else:
-            showInformation('You didnt enter a valid number. Try again!')
+          showInformation('You didnt enter a valid card. Try again!')
+      elif guess1.strip().lower() in self.puzzleKeys:
+        if self.count >= 3:           
+          self.loser()
+          return false
+        self.incorrectPick(sound, visual)
+        continue
+      else:
+        showInformation('You didnt enter a valid card. Try again!')
 
+  def loser(self, sound, visual):
+    sound.soundEffect("bad beep")
+    sound.soundEffect("heavy footsteps approaching")
+    showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
+    showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
+    sound.soundEffect("bad end")
+    showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
+    showInformation("So, you lose, obviously.")
+    
+  def incorrectPick(self, sound, visual):
+    sound.soundEffect("bad beep")
+    showInformation("The keycard is inserted, followed by a bright red light flashing on the panel.  There's no point in trying the other panels if you can't get this one right. You'll have to start over.")
+    if self.count < 3 and self.count >= 0:
+       sound.soundEffect("fail" + str(self.count))
+       showInformation("You also suddently feel a dreadful sense of urgency, like you won't have many chances to get this right before whoever is keeping you in this house comes back to collect.")
+    self.count += 1
+    
+  def correctPick(self, keycard, sound, visual):
+    sound.soundEffect("good beep")
+    showInformation("The " + str(self.puzzleKeys[keycard]) + " keycard is inserted into the slot and a green light illuminates on the panel.")
 
   def get_user_input1(self):
     return requestString('Choices: King, Queen, Ace, Joker\nWhat keycard do you want to insert into Slot (1)? ("exit" to leave puzzle:)\n')
