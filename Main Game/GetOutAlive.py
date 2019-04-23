@@ -42,7 +42,7 @@ def main():
     elif userCmd == "1":
       displayCommands()
     elif userCmd == "2":
-      visual.displayInventory()  
+      visual.displayInventory(poorSoul)  
     elif userCmd == "quit":
       poorSoul.gameRunning = False
     else:
@@ -106,26 +106,30 @@ class visuals:
     self.whiteText(text)
   
   #######For inventory
-  def displayInventory(self):
+  def displayInventory(self,player):
     #inventory = ["king", "queen", "ace","paper","book","joker"] ## for testing purposes
-    inventory.currentItems = []
-    if len(inventory.currentItems) == 0: ## if inventory is empty, will handle case
+    inventoryList = []
+    
+    for item in player.inventory.currentItems:
+       inventoryList.append(item)
+       
+    if len(inventoryList) == 0: ## if inventory is empty, will handle case
       showInformation("You do not have any items in your inventory")
       invInput = 'leave'
     else:
-      invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
-      
+      invInput = requestString("Which item do you want to see?\n" + str(inventoryList)+"\nType leave to leave menu")
+      #TODO:(maybe) account for Caps and spaces
     if invInput == 'leave':
        return True ##should return user back to general action prompt
   
     #for item in inventory: 
-    if invInput in inventory.currentItems:
+    if invInput in inventoryList:
       itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
       posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
       posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
-      text = "This should display " + invInput + "'s description from the dictionary (Use key's values in Dict)"
-      self.whiteText(text)
+      self.whiteText(player.inventory.currentItems[invInput])
       self.drawInventory(itemPic,posX,posY)
+      showInformation("Continue?")
     else:      
       showInformation("You do not have that item.")    
    
@@ -338,7 +342,7 @@ class houseRooms:
         return # player already has item
     player.inventory.addItem(roomItem)
     visual.showInventory(makePicture(getMediaPath() + roomItem + ".jpg"), player.inventory.currentItems[roomItem])
-    showInformation("Good job!")
+    showInformation("This item is now in your inventory.")
     
 class singleRoom:
   # Represents a room
