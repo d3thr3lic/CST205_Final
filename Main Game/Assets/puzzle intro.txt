@@ -13,18 +13,3 @@ The two walls have three panels each, and what appears to be a slot for a card o
 Two of the panels already have a keycard already inserted. 
 
 One has a label of a Jack of Spades in the right-most panel on one wall, and one has just an unlabeled keycard in the right-most panel on the opposite wall.
-
-
-
-|****** Wall ********|                   |********* Wall **********|
-|--------------------|-------------------|-------------------------|
-
-| [ unmarked card ]  |                   |         [ X ]   (3)     |
-|--------------------| direction facing  |-------------------------|
-|       [ X ]  (1)   |      <----->      |         [ X ]   (4)     |
-|--------------------|                   |-------------------------|
-
-|       [ X ]  (2)   |                   |   [ Jack of Spades ]    |
-|--------------------|-------------------|-------------------------|
-
-
