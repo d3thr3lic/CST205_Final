@@ -39,7 +39,7 @@ def main():
     elif userCmd == "1":
       displayCommands()
     elif userCmd == "2":
-      visual.displayInventory()  
+      visual.displayInventory() 
     elif userCmd == "quit":
       poorSoul.gameRunning = False
     else:
@@ -104,20 +104,19 @@ class visuals:
   
   #######For inventory
   def displayInventory(self):
-    inventory = ["king", "queen", "ace","paper","book"] ## for testing purposes, delete once connected to game inventory system
-   
-    if len(inventory) == 0: ## if inventory is empty, will handle case
+    #inventory = ["king", "queen", "ace","paper","book","joker"] ## for testing purposes
+    inventory.currentItems = []
+    if len(inventory.currentItems) == 0: ## if inventory is empty, will handle case
       showInformation("You do not have any items in your inventory")
-      ##TODO: should return user back to general action prompt
+      invInput = 'leave'
     else:
       invInput = requestString("Which item do you want to see?\n" + str(inventory)+"\nType leave to leave menu")
-      ##some what redudant with examineItem()
       
     if invInput == 'leave':
-       return True ##TODO: should return user back to general action prompt
-     
+       return True ##should return user back to general action prompt
+  
     #for item in inventory: 
-    if invInput in inventory:
+    if invInput in inventory.currentItems:
       itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
       posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
       posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
@@ -126,9 +125,17 @@ class visuals:
       self.drawInventory(itemPic,posX,posY)
     else:      
       showInformation("You do not have that item.")
-         
+  
+  def showInventory(self,invInput):
+    itemPic = makePicture(getMediaPath() + invInput + ".jpg") #takes in item image
+    posX = getWidth(self.canvas)/2-getWidth(itemPic)/2
+    posY = getHeight(self.canvas)/2-getHeight(itemPic)/2
+    text = "This should display " + invInput + "'s description from the dictionary (Use key's values in Dict)"
+    self.whiteText(text)
+    self.drawInventory(itemPic,posX,posY)
+                     
   def drawInventory(self,itemPic,width,height):
-    inventory = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
+    inventory.currentItems = self.pyCopyIgnoreColor(itemPic,self.canvas,width,height,green) 
     #green was used items that need to not be square
     repaint(self.canvas)
     time.sleep(3)  
@@ -375,6 +382,8 @@ class inventory:
       
   def addItem(self, item):
     self.currentItems[item] = self.possibleItems.get(item)
+    print self.currentItems(item)
+    
     
 #class actions:
   # Represents character actions
@@ -564,4 +573,4 @@ def otherCommand(str, roomIn, inventory, allItems):#----------------------------
   elif str == "inventory":
     listInventory(inventory)
   elif str == "examine":
-    examineItem(inventory, allItems)
+    examineItem(inventory, allItems)                                                                                                                                                                      
