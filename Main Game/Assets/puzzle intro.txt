@@ -1,0 +1,21 @@
+A door suddenly opens and you walk through it. You make your way down the half-rotted, creaky stairs leading to the basement. The pale moonlight penetrating the weathered and streaked ground-level
+ windows provides just enough light for you identify your surroundings and effictively navigate through the labyrinth cellar room. If only those windows 
+were a little larger than size of a pet door, you could claim your freedom, you think to yourself. In any case, you get to the end of the maze-like room,
+ and see a large steel-enforced door with 6 two-inch diameter rods securing the door to the granite wall.
+As you look around the room to uncover any clues to unlocking this behemoth of a barrier, you realize there are electric panels on each side of the walls 
+behind you. The two walls have three panels each, and what appears to be a slot for a card of some sort to be inserted. Two of the panels already have
+a keycard already inserted. One has a label of a Jack of Spades in the right most panel on one wall, and one has just an unlabeled keycard in the right-most panel
+on the opposite wall.
+
+
+|****** Wall ********|                   |********* Wall **********|
+|--------------------|-------------------|-------------------------|
+
+| [ unmarked card ]  |                   |         [ X ]   (3)     |
+|--------------------| direction facing  |-------------------------|
+|       [ X ]  (1)   |      <----->      |         [ X ]   (4)     |
+|--------------------|                   |-------------------------|
+
+|       [ X ]  (2)   |                   |   [ Jack of Spades ]    |
+|--------------------|-------------------|-------------------------|
+

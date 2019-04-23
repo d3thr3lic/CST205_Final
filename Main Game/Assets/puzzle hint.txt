@@ -1,0 +1,6 @@
+A moonbeam through a window illuminates a dusty crumpled piece of paper in the corner of one of the walls.
+
+The paper reads: "Murray told me that these bastards rewired the circuit to the transport door, so the fuses need to go in the right order for it to open. I can't remember the whole configuration, but the Ace goes on the same wall with the Jack, the Joker and King are definitely not next to each other, and the Joker and Ace are opposite of each other on the walls."
+
+To Escape, you must 
+figure out the correct configuration in 3 attempts or less!
