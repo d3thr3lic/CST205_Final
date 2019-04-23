@@ -1,7 +1,7 @@
 Ace of Spades $This is a keycard with the image of an Ace of Spades playing card.
-King of Spades $This is a keycard with the image of the King of Spades playing card. I wonder what it is used for.
+King of Spades $This is a keycard with the image of the King of Spades playing card. I wonder what it is used for?
 Queen of Spades $This is a keycard with image of an Queen of Spades playing card.
-Joker $This is a keycard with a joker on it.
-Ledger $A ledger that has a list of contacts and numerous illegal weapons with dollar amounts associated to them.
+Joker $This is a keycard with a Joker on it.
+Ledger $This is a ledger that has a list of contacts and numerous illegal weapons.  Each weapon is recorded with dollar amounts in the ledger.
 Crumpled Note $A crumpled note. It reads: "Don't forget to close and lock the window!"
-Mysterious Note $A note, you appear to recognize the writing. "Your cut will be 30% of the cash that you find! No less"
+Mysterious Note $A note, you appear to recognize the writing. "Your cut will be 30% of the cash that you find! No less."
