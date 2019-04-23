@@ -85,7 +85,7 @@ def setMediaPathToCurrentDir():
     setMediaPath(filePath + '\\Assets\\')
     
 def getTextFile(fileName):
-  return open(getMediaPath() + fileName + ".txt", 'r')
+  return open(getMediaPath() + fileName + ".doc", 'r')
 
 # ********************************************** visuals **************************************************
 class visuals:
