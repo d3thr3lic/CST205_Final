@@ -110,7 +110,7 @@ def main():
                     guess4 = str(choice4)
 
                     if guess4.strip().lower() == puzzleKeys[2]:
-                        print("The " + str(puzzleKeys[2]) + " fuse snaps perfectly into the slot.")
+                        print("The " + str(puzzleKeys[2]) + " keycard slides nicely into slot, and at once all six panels start flashing green in unison.")
                         print("Suddently, you see and hear the six thick steel rods that were previously\n"
                                 "blocking the giant door quickly slide and recede from the granite foundation,\n"
                                 "disappearing into the solid wall, as the latch unlocks and the door slowly creaks open")
