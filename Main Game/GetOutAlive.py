@@ -36,7 +36,7 @@ def main():
     if userCmd in movementCommands(): #check to make sure that the command given was valid for each control type
       changedRoom = house.changeRoom(userCmd, sound)
       if not changedRoom: # user input was not allowed
-        showInformation("There is no where to go in the direction")
+        showInformation("There is nowhere to go in the direction")
         continue
       else:
         visual.paintRoom(house.rooms[house.currentRoom])
@@ -492,7 +492,7 @@ class puzzle():
                               "disappearing into the solid wall, as the latch unlocks and the door slowly creaks open.\n")
               showInformation("You quickly book it through the tunnel beyond the door and somehow make it back up to the surface, down the street, unscathed.")
               sound.continueMusic()
-              showInformation("Yay! You're finally free from this nightmare(and game), you learn your lesson to not take what's not yours(not really), and you win!!")
+              showInformation("Yay! You're finally free from this nightmare (and the game), you learn your lesson to not take what's not yours (not really), and you win!!")
               return true
             elif guess4.strip().lower() in self.puzzleKeys:
               if self.count >= 3:
@@ -501,7 +501,7 @@ class puzzle():
               self.incorrectPick(sound, visual)
               continue
             else:
-              showInformation('You didnt enter a valid card. Try again!')                  
+              showInformation('You did not enter a valid card. Try again!')                  
           elif guess3.strip().lower() in self.puzzleKeys:
             if self.count >= 3:
               self.loser(sound, visual)
@@ -509,7 +509,7 @@ class puzzle():
             self.incorrectPick(sound, visual)
             continue
           else:
-            showInformation('You didnt enter a valid card. Try again!')            
+            showInformation('You did not enter a valid card. Try again!')            
         elif guess2.strip().lower() in self.puzzleKeys:
           if self.count >= 3:
             self.loser(sound, visual)
@@ -517,7 +517,7 @@ class puzzle():
           self.incorrectPick(sound, visual)       
           continue
         else:
-          showInformation('You didnt enter a valid card. Try again!')
+          showInformation('You did not enter a valid card. Try again!')
       elif guess1.strip().lower() in self.puzzleKeys:
         if self.count >= 3:           
           self.loser(sound, visual)
@@ -525,14 +525,14 @@ class puzzle():
         self.incorrectPick(sound, visual)
         continue
       else:
-        showInformation('You didnt enter a valid card. Try again!')
+        showInformation('You did not enter a valid card. Try again!')
 
   def loser(self, sound, visual):
     sound.continueMusic()
     sound.soundEffect("bad beep")
     sound.soundEffect("heavy footsteps approaching")
     showInformation("Failing yet again at matching the slot and unlocking the door in front of you, you frantically turn around and freeze in fear upon hearing heavy footsteps hurrying down the basement stairs.")
-    showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
+    showInformation("To your horror, you are met with the armed psychotic gunrunner that has finally located your whereabouts, and, with a maniacal smile, introduces you to his merchandise in the form of molten chunks of lead, effectively shredding you in half.")
     sound.soundEffect("bad end")
     showInformation("As you scream in utter agony one last time on this earth, your memory finally catches up with you, and you realize how stupid it was to try and steal from this guy.")
     showInformation("So, you lose, obviously.")
