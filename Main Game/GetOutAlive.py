@@ -207,6 +207,7 @@ class visuals:
     linesList = []
     for line in lines:
       linesList.append(line)
+      linesList.append("\n")
     self.whiteText(linesList)
   
   def textBox(self, x, y, xLen, yLen):
